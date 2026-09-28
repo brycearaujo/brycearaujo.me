@@ -202,8 +202,6 @@ window.PROFILE = {
   ],
 
   "theme": {
-    "accent": "#722F37",
-    "accent2": "#C68E4F",
     "resumeAccent": "#000000"
   }
 };

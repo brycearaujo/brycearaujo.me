@@ -2,8 +2,6 @@ BEGIN:VCARD
 VERSION:3.0
 N:Araujo;Bryce;;;
 FN:Bryce Araujo
-TITLE:Development & Product Intern
-ORG:MagView (Applied Software Inc.)
 EMAIL;TYPE=INTERNET,PREF:brycejaraujo@gmail.com
 TEL;TYPE=CELL,VOICE:240-360-6065
 ADR;TYPE=HOME:;;;Burtonsville;MD;;

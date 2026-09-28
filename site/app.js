@@ -33,12 +33,8 @@
     try { return new URL(url).host.replace(/^www\./, ''); } catch { return url; }
   };
 
-  // Metrics get a highlighter mark in the web résumé: $12,000 · 1,500 · 18% · 200K+ · 60+ · 3x
-  // (whole numbers only — never the "2" in B2B — and never trailing punctuation)
-  const METRIC = /(\$\d+(?:,\d{3})*(?:\.\d+)?[KMB]?\+?|\b\d{1,3}(?:,\d{3})+\+?|\b\d+(?:\.\d+)?(?:%|[KMB]\b\+?|\+|x\b))/g;
-  const highlight = (text) => esc(text).replace(METRIC, '<b class="metric">$1</b>');
-  // Bullet text: metric highlights plus **bold lead-ins** (same markup the formal résumé uses)
-  const rich = (text) => highlight(text).replace(/\*\*(.+?)\*\*/g, '<strong class="lead-in">$1</strong>');
+  // Bullet text: plain, except **bold lead-ins** (same markup the formal résumé uses)
+  const rich = (text) => esc(text).replace(/\*\*(.+?)\*\*/g, '<strong class="lead-in">$1</strong>');
 
   const words = String(P.name || '').trim().split(/\s+/).filter(Boolean);
   const firstName = P.firstName || words[0] || '';

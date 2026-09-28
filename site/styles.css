@@ -21,7 +21,7 @@
   --pb-ink-strong: #8A5B26; /* icons sitting on a peanut-butter circle */
   --tag-bg: #EFDDBF;      /* peanut butter: skill tags */
   --tag-ink: #5B4636;
-  --accent-soft: #EFDDBF; /* peanut-butter tint: icon circles, number highlighter */
+  --accent-soft: #EFDDBF; /* peanut-butter tint: icon circles */
   --accent-2: #C68E4F;    /* peanut butter: timeline dots, glow (decorative) */
   --on-accent: #FAF6EB;
   --nav-on: #FFFCF5;      /* the highlighted section tab */
@@ -218,9 +218,11 @@ p { text-wrap: pretty; }
 .topbar-inner { height: var(--topbar-h); display: flex; align-items: center; gap: 16px; }
 
 .brand { display: flex; align-items: center; min-width: 0; text-decoration: none; }
+/* Line height leaves room for Lora's descenders (the y and j): with a tighter one, overflow: hidden
+   (needed for the "…" on very narrow screens) clips their tails */
 .brand-name {
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  font: 600 clamp(21px, 2.1vw, 25px)/1.1 var(--display); letter-spacing: -0.02em;
+  font: 600 clamp(21px, 2.1vw, 25px)/1.4 var(--display); letter-spacing: -0.02em;
 }
 
 .nav { margin-left: auto; display: flex; gap: 4px; }
@@ -570,11 +572,6 @@ h3.eyebrow { font-family: inherit; line-height: 1.6; }
 .tl-more[open] > summary { order: 2; }
 .tl-more:not([open]) .tl-more-close, .tl-more[open] .tl-more-open { display: none; }
 .tl-more[open] { display: flex; flex-direction: column; align-items: flex-start; }
-.metric {
-  font-weight: 700; color: var(--ink);
-  background: linear-gradient(transparent 60%, var(--accent-soft) 60%);
-  padding: 0 2px; border-radius: 2px;
-}
 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 0; padding: 0; list-style: none; }
 .tags li { padding: 4px 10px; border-radius: 999px; background: var(--tag-bg); color: var(--tag-ink); font-size: 12.5px; font-weight: 600; }
 
