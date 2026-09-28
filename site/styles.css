@@ -212,7 +212,7 @@ p { text-wrap: pretty; }
   -webkit-backdrop-filter: saturate(1.4) blur(14px);
   backdrop-filter: saturate(1.4) blur(14px);
   border-bottom: 1px solid transparent;
-  transition: border-color .2s ease, transform .34s cubic-bezier(.2, .8, .2, 1);
+  transition: border-color .2s ease;
 }
 .topbar.is-scrolled { border-bottom-color: var(--line); }
 .topbar-inner { height: var(--topbar-h); display: flex; align-items: center; gap: 16px; }
@@ -258,11 +258,12 @@ button.reach-item { width: 100%; border: 0; background: transparent; font-family
     background: var(--bg-2); border: 1px solid var(--line);
   }
   .nav a { padding: 7px 4px; border-radius: 11px; text-align: center; font-size: 14px; font-weight: 600; }
-  /* Scrolling down: the bar slides up by --tuck (measured in app.js) so only the section tabs stay in
-     view, and the name + "⋯" fade out as they go. Scrolling back up slides it all back down. */
-  .brand, .more { transition: opacity .22s ease; }
-  .topbar.is-tucked { transform: translateY(calc(-1 * var(--tuck, 0px))); }
-  .topbar.is-tucked .brand, .topbar.is-tucked .more { opacity: 0; pointer-events: none; }
+  /* Scrolling: app.js moves the bar up in step with the page (inline transform) so only the section
+     tabs stay in view, fading the name + "⋯" as they go, and eases it the rest of the way if a scroll
+     stops part-way. Its own compositor layer keeps the blurred bar from stuttering. */
+  .topbar { will-change: transform; }
+  .topbar.is-tucked .brand, .topbar.is-tucked .more { pointer-events: none; }
+  .topbar.is-tucked .more .reach-menu { visibility: hidden; pointer-events: none; }   /* never an invisible menu over the tabs */
 }
 
 /* ==========================================================================

@@ -61,7 +61,7 @@ window.PROFILE = {
   },
 
   "resume": {
-    "generate": true,
+    "generate": false,
     "maxPages": 1,
     "nameOnDocument": "Bryce J. Araujo",
     "contactLinks": ["linkedin"],
@@ -73,8 +73,8 @@ window.PROFILE = {
     "titles": {
       "education": "Education",
       "experience": "Experience",
-      "volunteer": "Volunteer Experience",
-      "skills": "Skills & Certifications"
+      "volunteer": "Volunteer experience",
+      "skills": "Skills & certifications"
     }
   },
 
@@ -87,7 +87,7 @@ window.PROFILE = {
       "gpa": "3.6",
       "honors": "Dean’s List (4 semesters)",
       "details": [
-        "Relevant Coursework: Management Information Systems, Systems Analysis Methods, Advanced Business Applications, Foundations of Data Science, Applied Statistics for Business & Economics, Business Communications Systems"
+        "Relevant coursework: Management Information Systems, Systems Analysis Methods, Advanced Business Applications, Foundations of Data Science, Applied Statistics for Business & Economics, Business Communications Systems"
       ],
       "webDetails": [
         "Internships during college: Data Analyst Intern (Summer 2025), Business & Data Analyst Intern (Summer 2026), and Development & Product Intern (July 2026 – Present), all at MagView"
@@ -204,7 +204,7 @@ window.PROFILE = {
   "theme": {
     "accent": "#722F37",
     "accent2": "#C68E4F",
-    "resumeAccent": "#1F3A5F"
+    "resumeAccent": "#000000"
   }
 };
 window.PROFILE_FILES = {"pdf":"files/Bryce-Araujo-Resume.pdf","vcf":"files/Bryce-Araujo.vcf","updated":"September 2026"};

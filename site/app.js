@@ -223,9 +223,9 @@
     ],
   });
 
-  // "My Résumé": one tap opens the PDF in a new tab (phones show it in their PDF viewer)
+  // "My résumé": one tap opens the PDF in a new tab (phones show it in their PDF viewer)
   const resumeLink = (cls) => FILES.pdf
-    ? `<a class="${cls}" href="${esc(FILES.pdf)}" target="_blank" rel="noopener">${icon('file')}My Résumé</a>`
+    ? `<a class="${cls}" href="${esc(FILES.pdf)}" target="_blank" rel="noopener">${icon('file')}My résumé</a>`
     : '';
 
   function renderHero() {
@@ -267,7 +267,7 @@
     return `
       <div class="container">
         <header class="section-head" data-reveal>
-          ${sectionHead(num('about'), 'About me', 'A little about me', 'about-title')}
+          ${sectionHead(num('about'), 'About me', 'Who am I?', 'about-title')}
         </header>
         <div class="about-grid${hasSide ? '' : ' about-grid--single'}">
           <div class="chapters">
@@ -378,7 +378,7 @@
   const sectionTitle = (key) => (has(P.resume?.titles?.[key]) ? P.resume.titles[key] : SECTIONS[key].title);
   const blockTitle = (key) => `<h3 class="block-title">${icon(SECTIONS[key].icon)}${esc(sectionTitle(key))}</h3>`;
 
-  // "Relevant Coursework: …" → bold label. Same rule as build.ps1 (label ≤ 40 raw characters).
+  // "Relevant coursework: …" → bold label. Same rule as build.ps1 (label ≤ 40 raw characters).
   const labeled = (text) => {
     const m = /^([^:]{1,40}):(.*)$/s.exec(String(text));
     return m ? `<b>${esc(m[1])}:</b>${esc(m[2])}` : esc(text);
@@ -479,7 +479,7 @@
     return `
       <div class="container">
         <header class="section-head" data-reveal>
-          ${sectionHead(num('contact'), 'Contact', 'How to Reach Me', 'contact-title', P.contactNote)}
+          ${sectionHead(num('contact'), 'Contact', 'How to reach me', 'contact-title', P.contactNote)}
         </header>
         <ul class="contact-list">
           ${rows.map((r, i) => `
@@ -720,56 +720,97 @@
   // screens where the short intro leaves About across the middle of the view.
   const topbar = $('#topbar');
 
-  // Phones: the row with your name and "⋯" slides up out of view while scrolling down, leaving just
-  // the section tabs pinned at the top, and slides back once you scroll up a little.
+  // Phones: the row with your name and "⋯" moves up out of view as you scroll down, in step with the
+  // page (like a native app's header), leaving just the section tabs pinned at the top. Scrolling up
+  // pulls it back the same way. If a scroll stops part-way, it glides the rest of the way in or out.
   const phoneBar = matchMedia('(max-width: 759px)');
   const topNav = $('.nav', topbar);
+  const brandEl = $('#brand');
   const moreWrap = $('.more', topbar);
-  const TUCK_AFTER = 90;    // px from the top before the row starts hiding
-  const SHOW_AFTER = 48;    // px of upward scrolling that brings it back
-  let tucked = false;
+  const REVEAL_ENOUGH = 20;  // px of scrolling up that commits to bringing the row back
+  let shift = 0;             // how far the bar can move: everything above the tabs, minus a 6px strip
+  let offset = 0;            // how far it has moved (0 = row showing, shift = row hidden)
   let lastY = scrollY;
-  let upTravel = 0;
-  // How far the bar moves: everything above the tabs, keeping a 6px strip of bar above them
-  const measureTuck = () => {
-    const shift = phoneBar.matches && topNav ? Math.max(0, topNav.offsetTop - 6) : 0;
-    topbar.style.setProperty('--tuck', `${shift}px`);
-    return shift;
+  let lastDir = 0;           // 1 = last scrolled down, -1 = up
+  let settleTimer;
+  const isTucked = () => shift > 0 && offset >= shift - 0.5;
+
+  const paint = () => {
+    topbar.style.transform = offset ? `translate3d(0, ${-offset}px, 0)` : '';
+    // The name and ⋯ fade a little ahead of the move, so they're gone before they reach the edge
+    const fade = shift ? Math.max(0, 1 - offset / (shift * 0.75)) : 1;
+    for (const el of [brandEl, moreWrap]) if (el) el.style.opacity = fade < 1 ? fade.toFixed(3) : '';
+    topbar.classList.toggle('is-tucked', isTucked());
   };
-  let tuckShift = measureTuck();
-  const setTucked = (on) => {
-    if (on === tucked) return;
-    tucked = on;
-    topbar.classList.toggle('is-tucked', on);
-    if (on && moreWrap?.classList.contains('is-open')) $('.more-toggle', moreWrap).click();   // close the ⋯ menu with it
+  // The ⋯ menu lives in the row, so it closes whenever the row starts to leave
+  const closeMore = () => { if (moreWrap?.classList.contains('is-open')) $('.more-toggle', moreWrap).click(); };
+  // Ease the rest of the way. Frame by frame from one value, so the slide and the fade always agree,
+  // and a new scroll can stop it wherever it is without anything jumping.
+  const GLIDE_MS = reducedMotion ? 0 : 300;
+  const easeOut = (t) => 1 - (1 - t) ** 3;
+  let glideFrame = 0;
+  const stopGlide = () => { cancelAnimationFrame(glideFrame); glideFrame = 0; };
+  const glideTo = (target) => {
+    stopGlide();
+    if (target === shift) closeMore();
+    if (target === offset) return;
+    if (!GLIDE_MS) { offset = target; paint(); return; }
+    const from = offset;
+    let start = 0;
+    const step = (now) => {
+      if (!start) start = now;
+      const t = Math.min(1, (now - start) / GLIDE_MS);
+      offset = from + (target - from) * easeOut(t);
+      paint();
+      glideFrame = t < 1 ? requestAnimationFrame(step) : 0;
+    };
+    glideFrame = requestAnimationFrame(step);
   };
+  // When scrolling stops with the row part-way: finish hiding it, unless you'd scrolled up enough to want it back
+  const settle = () => {
+    if (!shift || offset <= 0 || offset >= shift || scrollY < shift) return;   // near the top it just sits with the page
+    glideTo(lastDir < 0 && shift - offset >= REVEAL_ENOUGH ? 0 : shift);
+  };
+
   const onScroll = () => {
     const y = scrollY;
-    const prevY = lastY;
+    const dy = y - lastY;
     lastY = y;
     topbar.classList.toggle('is-scrolled', !atTop());
     if (atTop()) setActive('home');
-    if (!phoneBar.matches || y < TUCK_AFTER) { upTravel = 0; setTucked(false); return; }
-    if (y > prevY) { upTravel = 0; setTucked(true); }
-    else if (y < prevY) {
-      // Ignore the iPhone "bounce" past the bottom of the page settling back: that isn't scrolling up
-      const maxY = document.documentElement.scrollHeight - innerHeight;
-      if (prevY > maxY) return;
-      upTravel += prevY - y;
-      if (upTravel >= SHOW_AFTER) setTucked(false);
-    }
+    if (!shift || !dy) return;
+    // Ignore the iPhone "bounce" past the bottom of the page settling back: that isn't scrolling up
+    if (dy < 0 && y - dy > document.documentElement.scrollHeight - innerHeight) return;
+    stopGlide();
+    lastDir = Math.sign(dy);
+    offset = Math.min(shift, Math.max(0, offset + dy), Math.max(0, y));   // never hidden more than the page has scrolled
+    paint();
+    if (dy > 0) closeMore();
+    clearTimeout(settleTimer);
+    settleTimer = setTimeout(settle, 140);
   };
+  // Opening ⋯ while the row is part-way out brings it fully back and cancels a pending tuck
+  $('.more-toggle', moreWrap)?.addEventListener('click', () => {
+    if (!moreWrap.classList.contains('is-open')) return;   // (this click closed it)
+    clearTimeout(settleTimer);
+    glideTo(0);
+  });
+  const remeasure = () => {
+    shift = phoneBar.matches && topNav ? Math.max(0, topNav.offsetTop - 6) : 0;
+    offset = Math.min(offset, shift);
+    paint();
+  };
+  remeasure();
   addEventListener('scroll', onScroll, { passive: true });
   onScroll();
-  const remeasure = () => { tuckShift = measureTuck(); if (!phoneBar.matches) setTucked(false); };
   addEventListener('resize', remeasure);
   phoneBar.addEventListener?.('change', remeasure);
   // Keyboard users tabbing to the name or ⋯ get the row back
-  topbar.addEventListener('focusin', (e) => { if (!topNav?.contains(e.target)) setTucked(false); });
+  topbar.addEventListener('focusin', (e) => { if (!topNav?.contains(e.target)) glideTo(0); });
 
   // Jumping to a section (tabs, name, "Back to top"): leave room for the bar as it will be when the
-  // jump ends. Moving down tucks the row, and a short move up keeps it tucked, so those leave room for
-  // just the tabs; a longer move up brings the row back, so that leaves room for the full bar.
+  // jump ends. Moving down hides the row, so that leaves room for just the tabs; moving up brings the
+  // row back, so that leaves room for the full bar.
   document.addEventListener('click', (e) => {
     const link = e.target.closest('a[href^="#"]');
     const id = link ? link.getAttribute('href').slice(1) : '';
@@ -777,12 +818,11 @@
     if (!target) return;
     if (!phoneBar.matches) { root.style.scrollPaddingTop = ''; return; }
     const full = topbar.offsetHeight + 12;
-    const slim = full - tuckShift;
+    const slim = full - shift;
     const top = target.getBoundingClientRect().top;
-    const here = tucked ? slim : full;   // where a section sits when you're already on it
+    const here = full - offset;   // where a section sits when you're already on it
     if (Math.abs(top - here) < 3) { e.preventDefault(); return; }   // tapping the tab you're on: stay put
-    let endsTucked = top > here || (tucked && here - top < SHOW_AFTER);
-    if (endsTucked && scrollY + top - slim < TUCK_AFTER) endsTucked = false;   // lands near the top: row shows
+    const endsTucked = top > here && scrollY + top - slim >= shift;   // (a jump that ends near the top shows the row)
     root.style.scrollPaddingTop = `${endsTucked ? slim : full}px`;
   });
 
