@@ -29,13 +29,23 @@
   <div class="container topbar-inner">
     <a class="brand" href="#home" id="brand"></a>
     <nav class="nav" aria-label="Sections">
+      <a href="#home" data-nav="home">Home</a>
       <a href="#about" data-nav="about">About</a>
       <a href="#resume" data-nav="resume">Résumé</a>
       <a href="#contact" data-nav="contact">Contact</a>
     </nav>
+    <!-- Desktop: QR + theme as icon buttons -->
     <div class="topbar-actions">
       <button class="icon-btn" type="button" data-share aria-label="Share this page or show its QR code"><span data-icon="qr"></span></button>
-      <button class="icon-btn" type="button" data-theme-toggle aria-label="Toggle dark mode"></button>
+      <button class="icon-btn" type="button" data-theme-toggle="icon" aria-label="Toggle dark mode"></button>
+    </div>
+    <!-- Phones: the same two actions tucked into a "⋯" menu so the section links fit -->
+    <div class="reach more">
+      <button class="icon-btn reach-toggle more-toggle" type="button" aria-expanded="false" aria-controls="more-menu" aria-label="More options"><span data-icon="dots"></span></button>
+      <ul class="reach-menu" id="more-menu" aria-label="More options">
+        <li style="--i:0"><button class="reach-item" type="button" data-share><span class="reach-circle"><span data-icon="qr"></span></span><span class="reach-label">Share / QR code</span></button></li>
+        <li style="--i:1"><button class="reach-item" type="button" data-theme-toggle="menu"><span class="reach-circle"></span><span class="reach-label">Dark mode</span></button></li>
+      </ul>
     </div>
   </div>
 </header>
@@ -48,13 +58,6 @@
 </main>
 
 <footer class="footer" id="footer"></footer>
-
-<nav class="tabbar" aria-label="Sections">
-  <a href="#home" data-nav="home"><span data-icon="home"></span><span>Home</span></a>
-  <a href="#about" data-nav="about"><span data-icon="user"></span><span>About</span></a>
-  <a href="#resume" data-nav="resume"><span data-icon="file"></span><span>Résumé</span></a>
-  <a href="#contact" data-nav="contact"><span data-icon="mail"></span><span>Contact</span></a>
-</nav>
 
 <dialog class="share" id="share-dialog" aria-labelledby="share-title">
   <div class="share-inner">

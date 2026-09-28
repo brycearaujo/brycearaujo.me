@@ -166,7 +166,8 @@ p { text-wrap: pretty; }
 .chip-btn .icon { width: 16px; height: 16px; }
 
 /* ==========================================================================
-   Top bar (desktop nav) + floating tab bar (phones)
+   Top bar: name + section links (+ QR / theme). Stays put while scrolling.
+   Desktop: one row. Phones: name + "⋯" menu on top, the section links below.
    ========================================================================== */
 .topbar {
   position: sticky; top: 0; z-index: 50;
@@ -179,57 +180,47 @@ p { text-wrap: pretty; }
 .topbar.is-scrolled { border-bottom-color: var(--line); }
 .topbar-inner { height: var(--topbar-h); display: flex; align-items: center; gap: 16px; }
 
-.brand { display: flex; align-items: center; gap: 10px; min-width: 0; text-decoration: none; font-weight: 600; }
-.brand-mark {
-  position: relative; flex: none;
-  width: 36px; height: 36px; border-radius: 11px;
-  display: grid; place-items: center;
-  background: var(--ink); color: var(--bg);
-  font: 600 15px/1 var(--display); letter-spacing: .02em;
+.brand { display: flex; align-items: center; min-width: 0; text-decoration: none; }
+.brand-name {
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  font: 600 clamp(21px, 2.1vw, 25px)/1.1 var(--display); letter-spacing: -0.02em;
 }
-.brand-mark::after {
-  content: ""; position: absolute; top: -3px; right: -3px;
-  width: 10px; height: 10px; border-radius: 50%;
-  background: var(--accent); border: 2px solid var(--bg);
-}
-.brand-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .nav { margin-left: auto; display: flex; gap: 4px; }
 .nav a {
   padding: 9px 16px; border-radius: 999px;
   color: var(--ink-2); font-size: 15px; font-weight: 500; text-decoration: none;
-  transition: background-color .15s ease, color .15s ease;
+  transition: background-color .2s ease, color .2s ease, box-shadow .2s ease;
 }
 .nav a:hover { color: var(--ink); background: var(--bg-2); }
 .nav a.is-active { color: var(--ink); background: var(--surface); box-shadow: var(--shadow-sm); }
 .topbar-actions { display: flex; gap: 8px; margin-left: 8px; }
+.more { display: none; }
 
-.tabbar { display: none; }
+/* Items in the "⋯" menu are buttons that look like the Contact-me links */
+button.reach-item { width: 100%; border: 0; background: transparent; font-family: inherit; text-align: left; cursor: pointer; }
 
 @media (max-width: 759px) {
-  .nav { display: none; }
-  .topbar-actions { margin-left: auto; }
-  .tabbar {
-    position: fixed; z-index: 60;
-    left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px));
-    bottom: calc(10px + env(safe-area-inset-bottom));
+  :root { --topbar-h: 110px; }
+  .topbar-inner {
+    height: auto; padding: 8px 0 10px;
+    display: grid; grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "brand more" "nav nav";
+    align-items: center; gap: 8px 12px;
+  }
+  .brand { grid-area: brand; }
+  .brand-name { font-size: 23px; }
+  .topbar-actions { display: none; }
+  .more { display: block; grid-area: more; }
+  .more .icon-btn { width: 38px; height: 38px; }
+  /* Section links as a segmented bar; the active one is highlighted */
+  .nav {
+    grid-area: nav; margin: 0;
     display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 2px;
-    padding: 6px;
-    background: color-mix(in oklab, var(--surface) 88%, transparent);
-    -webkit-backdrop-filter: saturate(1.4) blur(16px);
-    backdrop-filter: saturate(1.4) blur(16px);
-    border: 1px solid var(--line); border-radius: 24px;
-    box-shadow: var(--shadow);
+    padding: 3px; border-radius: 14px;
+    background: var(--bg-2); border: 1px solid var(--line);
   }
-  .tabbar a {
-    display: flex; flex-direction: column; align-items: center; gap: 3px;
-    padding: 8px 4px; border-radius: 18px;
-    color: var(--ink-3); font-size: 11.5px; font-weight: 600; text-decoration: none;
-    transition: background-color .2s ease, color .2s ease;
-  }
-  .tabbar a.is-active { color: var(--ink); background: var(--bg-2); }
-  .tabbar .icon { width: 22px; height: 22px; }
-  body { padding-bottom: calc(92px + env(safe-area-inset-bottom)); }
+  .nav a { padding: 7px 4px; border-radius: 11px; text-align: center; font-size: 14px; font-weight: 600; }
 }
 
 /* ==========================================================================
@@ -772,7 +763,6 @@ dialog.share.is-open::backdrop { opacity: 1; }
   transition: opacity .25s ease, transform .25s ease;
 }
 .toast.is-on { opacity: 1; transform: translate(-50%, 0); }
-@media (max-width: 759px) { .toast { bottom: calc(104px + env(safe-area-inset-bottom)); } }
 
 /* ---------- Fallbacks ---------- */
 .fallback, .noscript { padding: 64px 0; }

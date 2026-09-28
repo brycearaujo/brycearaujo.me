@@ -65,6 +65,7 @@
     x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
     arrow: '<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',
     chevron: '<path d="m6 9 6 6 6-6"/>',
+    dots: '<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>',
     eye: '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
     compass: '<circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>',
     rotate: '<path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/>',
@@ -189,7 +190,6 @@
   const num = (id) => String(sectionOrder.indexOf(id) + 1).padStart(2, '0');
 
   const sectionHead = (num, label, title, id, lead = '') => `
-    <p class="section-num"><b>${num}</b><i></i>${esc(label)}</p>
     <h2 id="${id}">${title}</h2>
     ${has(lead) ? `<p class="lead">${esc(lead)}</p>` : ''}`;
 
@@ -525,7 +525,7 @@
     $('#sample-banner').innerHTML =
       '<div class="sample-banner">Draft: review the About text in <code>profile.json</code>, then set <code>"draft": false</code> and run <code>build.cmd</code>.</div>';
   }
-  $('#brand').innerHTML = `<span class="brand-mark" aria-hidden="true">${esc(initials)}</span><span class="brand-name">${esc(P.name)}</span>`;
+  $('#brand').innerHTML = `<span class="brand-name">${esc(P.name)}</span>`;
   $('#home').innerHTML = renderHero();
   if (hasAbout) $('#about').innerHTML = renderAbout();
   else [$('#about'), ...$$('[data-nav="about"]')].forEach((el) => el.remove());
@@ -580,19 +580,25 @@
     setTimeout(() => URL.revokeObjectURL(a.href), 4000);
   };
 
-  // Theme toggle
-  const themeBtn = $('[data-theme-toggle]');
+  // Theme toggle: an icon button on desktop, a labelled item in the phone "⋯" menu
   const themeMeta = $('meta[name="theme-color"]');
   const darkQuery = matchMedia('(prefers-color-scheme: dark)');
   const currentTheme = () => root.dataset.theme || (darkQuery.matches ? 'dark' : 'light');
   const syncTheme = () => {
     const dark = currentTheme() === 'dark';
-    themeBtn.innerHTML = icon(dark ? 'sun' : 'moon');
-    themeBtn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    $$('[data-theme-toggle="icon"]').forEach((b) => {
+      b.innerHTML = icon(dark ? 'sun' : 'moon');
+      b.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    });
+    $$('[data-theme-toggle="menu"]').forEach((b) => {
+      $('.reach-circle', b).innerHTML = icon(dark ? 'sun' : 'moon');
+      $('.reach-label', b).textContent = dark ? 'Light mode' : 'Dark mode';
+    });
     themeMeta?.setAttribute('content', getComputedStyle(document.body).backgroundColor);
   };
   let themeFadeTimer;
-  themeBtn.addEventListener('click', () => {
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('[data-theme-toggle]')) return;
     // Fade the colors into the new theme instead of snapping (skipped for reduced motion)
     if (!reducedMotion) {
       root.classList.add('theme-fade');
@@ -606,23 +612,22 @@
   darkQuery.addEventListener?.('change', syncTheme);
   syncTheme();
 
-  // "Contact me" dropdown (a disclosure: the button toggles a list of links)
-  const reach = $('.reach');
-  if (reach) {
-    const reachToggle = $('.reach-toggle', reach);
-    const setReach = (open) => {
-      reach.classList.toggle('is-open', open);
-      reachToggle.setAttribute('aria-expanded', String(open));
+  // Dropdowns ("Contact me" and the phone "⋯" menu): a button that toggles a list of links/actions
+  $$('.reach').forEach((wrap) => {
+    const toggle = $('.reach-toggle', wrap);
+    const setOpen = (open) => {
+      wrap.classList.toggle('is-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
     };
-    reachToggle.addEventListener('click', () => setReach(!reach.classList.contains('is-open')));
-    document.addEventListener('click', (e) => { if (!reach.contains(e.target)) setReach(false); });
-    reach.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && reach.classList.contains('is-open')) { setReach(false); reachToggle.focus(); }
+    toggle.addEventListener('click', () => setOpen(!wrap.classList.contains('is-open')));
+    document.addEventListener('click', (e) => { if (!wrap.contains(e.target)) setOpen(false); });
+    wrap.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && wrap.classList.contains('is-open')) { setOpen(false); toggle.focus(); }
     });
-    // Keyboard users tabbing past the list close it (mouse clicks on links are handled below)
-    reach.addEventListener('focusout', (e) => { if (e.relatedTarget && !reach.contains(e.relatedTarget)) setReach(false); });
-    $('.reach-menu', reach).addEventListener('click', (e) => { if (e.target.closest('a')) setTimeout(() => setReach(false), 150); });
-  }
+    // Keyboard users tabbing past the list close it (mouse clicks on items are handled below)
+    wrap.addEventListener('focusout', (e) => { if (e.relatedTarget && !wrap.contains(e.relatedTarget)) setOpen(false); });
+    $('.reach-menu', wrap).addEventListener('click', (e) => { if (e.target.closest('a, button')) setTimeout(() => setOpen(false), 150); });
+  });
 
   // Business card: flip + gentle tilt that follows the mouse
   const card = $('.bcard');

@@ -18,7 +18,7 @@ window.PROFILE = {
   "headline": "",
   "tagline": "I’m a Business Technology Administration student at UMBC and a part-time Development & Product Intern at MagView, where I’m one of the two original developers of Maven, the company’s first AI voice agent. When I’m not at school or work, I’m lifting in the gym, skiing in the winter, wakeboarding in the summer, working on and driving my C5 Corvette, or enjoying quality time with my family and friends.",
   "seoDescription": "Bryce Araujo: Business Technology Administration student at UMBC and part-time Development & Product Intern at MagView, co-building Maven, the company’s first AI voice agent.",
-  "status": { "open": true, "text": "Interning at MagView · Class of 2027" },
+  "status": { "open": true, "text": "" },
   "card": { "subtitle": "Business Technology Administration · UMBC" },
 
   "location": "Burtonsville, MD",
