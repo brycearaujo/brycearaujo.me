@@ -42,9 +42,8 @@
 
   const words = String(P.name || '').trim().split(/\s+/).filter(Boolean);
   const firstName = P.firstName || words[0] || '';
-  const initials = ((words[0]?.[0] || '') + (words.length > 1 ? words[words.length - 1][0] : '')).toUpperCase();
 
-  if (has(P.theme?.accent)) root.style.setProperty('--accent', P.theme.accent);
+  // (Site colors live in styles.css tokens so light and dark mode can each use their own accent)
 
   /* ------------------------------------------------------------------ icons */
   // Paths from Lucide (lucide.dev, ISC license).
@@ -66,9 +65,7 @@
     arrow: '<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',
     chevron: '<path d="m6 9 6 6 6-6"/>',
     dots: '<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>',
-    eye: '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
     compass: '<circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>',
-    rotate: '<path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/>',
     send: '<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>',
     message: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
     map: '<polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/>',
@@ -148,7 +145,7 @@
         c += run - 1;
       }
     }
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" shape-rendering="crispEdges" role="img" aria-label="QR code linking to ${esc(text)}"><rect width="${size}" height="${size}" fill="#ffffff"/><path d="${d}" fill="#1C1A17"/></svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" shape-rendering="crispEdges" role="img" aria-label="QR code linking to ${esc(text)}"><rect width="${size}" height="${size}" fill="#ffffff"/><path d="${d}" fill="#2A1D15"/></svg>`;
   };
 
   const qrPngBlob = (text, px = 1200) =>
@@ -163,7 +160,7 @@
       const ctx = canvas.getContext('2d');
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#1C1A17';
+      ctx.fillStyle = '#2A1D15';
       for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (qr.isDark(r, c)) ctx.fillRect((c + 4) * scale, (r + 4) * scale, scale, scale);
       canvas.toBlob(resolve, 'image/png');
     });
@@ -175,7 +172,7 @@
     const note = !url
       ? 'QR code appears once the site is online (or set "website" in profile.json).'
       : qrStatus === 'loading' ? 'Loading QR code…' : 'QR code unavailable right now. Use Copy link instead.';
-    return `<div class="bcard-qr-empty">${esc(note)}</div>`;
+    return `<div class="qr-empty">${esc(note)}</div>`;
   };
 
   /* -------------------------------------------------------------- sections */
@@ -193,70 +190,49 @@
     <h2 id="${id}">${title}</h2>
     ${has(lead) ? `<p class="lead">${esc(lead)}</p>` : ''}`;
 
-  // The card keeps to the essentials: who you are (name + one line) and how to reach you.
-  function renderCard() {
-    const url = pageUrl();
-    const subtitle = has(P.card?.subtitle) ? P.card.subtitle : P.headline;
-    const meta = [
-      has(P.phone) && `<span>${icon('phone')}${esc(P.phone)}</span>`,
-      has(P.email) && `<span>${icon('mail')}${esc(P.email)}</span>`,
-      has(P.location) && `<span>${icon('pin')}${esc(P.location)}</span>`,
-    ].filter(Boolean).join('');
-    return `
-      <div class="bcard-scene">
-        <div class="bcard-tilt">
-          <button class="bcard" type="button" aria-pressed="false" aria-label="Business card for ${esc(P.name)}. Press to flip and show a QR code.">
-            <span class="bcard-face bcard-front">
-              <span class="bcard-id">
-                <span class="bcard-name">${esc(P.name)}${has(P.pronouns) ? `<span class="bcard-pronouns">${esc(P.pronouns)}</span>` : ''}</span>
-                ${has(subtitle) ? `<span class="bcard-role">${esc(subtitle)}</span>` : ''}
-              </span>
-              <span class="bcard-meta">${meta}</span>
-            </span>
-            <span class="bcard-face bcard-back">
-              <span class="bcard-qr">${qrMarkup(url, 2)}</span>
-              <span class="bcard-back-text">
-                <strong>Scan to take me with you</strong>
-                ${url ? `<span class="url">${esc(url.replace(/^https?:\/\//, '').replace(/\/$/, ''))}</span>` : ''}
-                <span class="hint">Tap to flip back</span>
-              </span>
-            </span>
-          </button>
-        </div>
-        <p class="bcard-hint">${icon('rotate')}Click me!</p>
-      </div>`;
-  }
-
-  // "Contact me" dropdown: an icon circle + label for each way to reach you (email, phone, profiles)
-  function renderReach() {
-    const ways = [
-      has(P.email) && { href: `mailto:${P.email}`, icon: 'mail', label: P.email, hint: 'Email' },
-      has(P.phone) && { href: `tel:${digits(P.phone)}`, icon: 'phone', label: P.phone, hint: 'Call' },
-      ...socials.map((s) => ({ href: s.url, icon: s.icon, label: s.label, external: true })),
-    ].filter(Boolean);
-    if (!ways.length) return '';
+  // A button that drops down a short list of links (the "Contact me" menu).
+  // Opening it drops in each circle and slides out its label (see .reach in styles.css).
+  // Each item: { href, label, icon }, plus optional `attrs` (extra attributes for the link) and `hint` (tooltip).
+  const dropdown = ({ id, label, iconName, cls = 'btn btn-primary', menuLabel, items }) => {
+    const list = items.filter(Boolean);
+    if (!list.length) return '';
     return `
       <div class="reach">
-        <button class="btn reach-toggle" type="button" aria-expanded="false" aria-controls="reach-menu">
-          ${icon('message')}Contact me<svg class="icon chev" viewBox="0 0 24 24" aria-hidden="true">${ICONS.chevron}</svg>
+        <button class="${cls} reach-toggle" type="button" aria-expanded="false" aria-controls="${id}">
+          ${icon(iconName)}${esc(label)}<svg class="icon chev" viewBox="0 0 24 24" aria-hidden="true">${ICONS.chevron}</svg>
         </button>
-        <ul class="reach-menu" id="reach-menu" aria-label="Ways to reach ${esc(firstName)}">
-          ${ways.map((w, i) => `
+        <ul class="reach-menu" id="${id}" aria-label="${esc(menuLabel)}">
+          ${list.map((w, i) => `
             <li style="--i:${i}">
-              <a class="reach-item" href="${esc(w.href)}"${w.external ? ' target="_blank" rel="noopener me"' : ''}${w.hint ? ` title="${esc(w.hint)}"` : ''}>
+              <a class="reach-item" href="${esc(w.href)}"${w.attrs || ''}${w.hint ? ` title="${esc(w.hint)}"` : ''}>
                 <span class="reach-circle">${icon(w.icon)}</span>
                 <span class="reach-label">${esc(w.label)}</span>
               </a>
             </li>`).join('')}
         </ul>
       </div>`;
-  }
+  };
+
+  // "Contact me": email, phone, then each profile
+  const contactMenu = () => dropdown({
+    id: 'reach-menu', label: 'Contact me', iconName: 'message', menuLabel: `Ways to reach ${firstName}`,
+    items: [
+      has(P.email) && { href: `mailto:${P.email}`, icon: 'mail', label: P.email, hint: 'Email' },
+      has(P.phone) && { href: `tel:${digits(P.phone)}`, icon: 'phone', label: P.phone, hint: 'Call' },
+      ...socials.map((s) => ({ href: s.url, icon: s.icon, label: s.label, attrs: ' target="_blank" rel="noopener me"' })),
+    ],
+  });
+
+  // "My Résumé": one tap opens the PDF in a new tab (phones show it in their PDF viewer)
+  const resumeLink = (cls) => FILES.pdf
+    ? `<a class="${cls}" href="${esc(FILES.pdf)}" target="_blank" rel="noopener">${icon('file')}My Résumé</a>`
+    : '';
 
   function renderHero() {
     const actions = [
-      FILES.vcf && `<a class="btn" href="${esc(FILES.vcf)}">${icon('userPlus')}Save my contact</a>`,
-      (FILES.pdf || FILES.docx) && `<button class="btn" type="button" data-resume-open>${icon('file')}My Résumé</button>`,
-      renderReach(),
+      FILES.vcf && `<a class="btn btn-primary" href="${esc(FILES.vcf)}">${icon('userPlus')}Save my contact</a>`,
+      resumeLink('btn btn-primary'),
+      contactMenu(),
     ].filter(Boolean);
     const items = [
       has(P.status?.text) &&
@@ -270,11 +246,8 @@
     const facts = arr(P.quickFacts);
     return `
       <div class="container">
-        <div class="hero-grid">
-          <div class="hero-copy">
-            ${items.map((html, i) => html.replace(/^<(\w+)/, `<$1 data-reveal style="--d:${i * 70}ms"`)).join('')}
-          </div>
-          <div class="hero-card" data-reveal style="--d:200ms">${renderCard()}</div>
+        <div class="hero-copy">
+          ${items.map((html, i) => html.replace(/^<(\w+)/, `<$1 data-reveal style="--d:${i * 70}ms"`)).join('')}
         </div>
         ${facts.length ? `
           <div class="facts" data-reveal>
@@ -346,20 +319,49 @@
       </details>`;
   };
 
+  const roleHead = (x, tag) => `
+    <div class="tl-meta">
+      <${tag} class="tl-title">${esc(x.title)}</${tag}>
+      ${has(x.dates) ? `<span class="tl-dates">${esc(x.dates)}</span>` : ''}
+    </div>`;
+  const tagList = (x) =>
+    has(x.tags) ? `<ul class="tags" aria-label="Skills used">${arr(x.tags).map((t) => `<li>${esc(t)}</li>`).join('')}</ul>` : '';
+
+  // Back-to-back roles at the same employer and location share one card under one employer
+  // heading (like the formal résumé), so the org line isn't repeated for every role.
+  // The group header has no combined date range: each role keeps its own dates.
+  const byEmployer = (items) => items.reduce((groups, x) => {
+    const prev = groups[groups.length - 1]?.[0];
+    const same = prev && has(x.org) && x.org === prev.org && (x.location || '') === (prev.location || '');
+    if (same) groups[groups.length - 1].push(x);
+    else groups.push([x]);
+    return groups;
+  }, []);
+
   const timeline = (items) => `
     <ol class="timeline">
-      ${arr(items).map((x) => `
+      ${byEmployer(arr(items)).map((g) => `
         <li class="tl-item" data-reveal>
           <span class="tl-dot" aria-hidden="true"></span>
-          <article class="tl-card">
-            <div class="tl-meta">
-              <h4 class="tl-title">${esc(x.title)}</h4>
-              ${has(x.dates) ? `<span class="tl-dates">${esc(x.dates)}</span>` : ''}
-            </div>
-            ${has(x.org) || has(x.location) ? `<p class="tl-org">${[x.org, x.location].filter(has).map(esc).join(' <span aria-hidden="true">·</span> ')}</p>` : ''}
-            ${bulletList(x.bullets)}
-            ${has(x.tags) ? `<ul class="tags" aria-label="Skills used">${arr(x.tags).map((t) => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
-          </article>
+          ${g.length === 1 ? `
+            <article class="tl-card">
+              ${roleHead(g[0], 'h4')}
+              ${has(g[0].org) || has(g[0].location) ? `<p class="tl-org">${[g[0].org, g[0].location].filter(has).map(esc).join(' <span aria-hidden="true">·</span> ')}</p>` : ''}
+              ${bulletList(g[0].bullets)}
+              ${tagList(g[0])}
+            </article>` : `
+            <article class="tl-card tl-group">
+              <header class="tl-employer">
+                <h4 class="tl-employer-name">${esc(g[0].org)}</h4>
+                ${has(g[0].location) ? `<span class="tl-employer-loc">${esc(g[0].location)}</span>` : ''}
+              </header>
+              ${g.map((x) => `
+                <div class="tl-role">
+                  ${roleHead(x, 'h5')}
+                  ${bulletList(x.bullets)}
+                  ${tagList(x)}
+                </div>`).join('')}
+            </article>`}
         </li>`).join('')}
     </ol>`;
 
@@ -382,7 +384,12 @@
     return m ? `<b>${esc(m[1])}:</b>${esc(m[2])}` : esc(text);
   };
 
-  const eduCard = (e) => `
+  // "brief": true (e.g. high school) shows a compact card: school plus one line, no details
+  const eduCard = (e) => e.brief ? `
+    <article class="edu edu--brief" data-reveal>
+      <h4 class="edu-school">${esc(e.school)}</h4>
+      <p class="edu-degree">${[e.degree, e.dates, e.honors].filter(has).map(esc).join(' <span aria-hidden="true">·</span> ')}</p>
+    </article>` : `
     <article class="edu" data-reveal>
       <h4 class="edu-school">${esc(e.school)}</h4>
       <p class="edu-degree">${esc(e.degree)}</p>
@@ -405,16 +412,16 @@
         ${blockTitle('headed')}
         <div class="headed-card" data-reveal>
           <p>${esc(asp.text)}</p>
-          ${has(asp.lookingFor) ? `<ul class="skill-chips" aria-label="What I'm looking for">${arr(asp.lookingFor).map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
+          ${has(asp.lookingFor) ? `<ul class="skill-list" aria-label="What I'm looking for">${arr(asp.lookingFor).map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
         </div>
       </div>`;
   };
 
   function renderResume() {
     const r = P.resume || {};
-    const resumeCta = FILES.pdf || FILES.docx
-      ? `<button class="btn btn-primary btn-lg" type="button" data-resume-open>${icon('file')}My Résumé</button>`
-      : '<p class="download-missing">Résumé files haven\'t been generated yet. Run build.cmd.</p>';
+    const resumeCta = FILES.pdf
+      ? resumeLink('btn btn-primary btn-lg')
+      : '<p class="download-missing">The résumé PDF hasn\'t been generated yet. Run build.cmd.</p>';
     // The website can go deeper than the one-page résumé: webSkills (if present) replaces skills here
     const skillGroups = has(P.webSkills) ? P.webSkills : P.skills;
     return `
@@ -434,71 +441,60 @@
             ${has(P.education) ? blockTitle('education') + arr(P.education).map(eduCard).join('') : ''}
             ${has(skillGroups) ? `
               ${blockTitle('skills')}
-              ${arr(skillGroups).map((g) => `
-                <div class="skill-group" data-reveal>
-                  <h4>${esc(g.group)}</h4>
-                  <ul class="skill-chips">${arr(g.items).map((s) => `<li>${esc(s)}</li>`).join('')}</ul>
-                </div>`).join('')}` : ''}
+              <div class="skills-card" data-reveal>
+                ${arr(skillGroups).map((g) => `
+                  <div class="skill-group">
+                    <h4>${esc(g.group)}</h4>
+                    <ul class="skill-list">${arr(g.items).map((s) => `<li>${esc(s)}</li>`).join('')}</ul>
+                  </div>`).join('')}
+              </div>` : ''}
           </aside>
         </div>
         ${headedBlock()}
       </div>`;
   }
 
+  // One compact row per way to reach you: the row itself is the main link (email, call, map,
+  // profile), with small extra actions (copy, text) at the end, like the "Contact me" menu
   function renderContact() {
-    const tiles = [];
-    if (has(P.email)) {
-      tiles.push(`
-        <div class="tile" data-reveal>
-          <span class="tile-icon">${icon('mail')}</span>
-          <p class="tile-label">Email</p>
-          <a class="tile-value" href="mailto:${esc(P.email)}">${esc(P.email)}</a>
-          <div class="tile-actions">
-            <a class="chip-btn" href="mailto:${esc(P.email)}">${icon('send')}Write me</a>
-            <button class="chip-btn" type="button" data-copy="${esc(P.email)}" data-copy-label="Email">${icon('copy')}Copy</button>
-          </div>
-        </div>`);
-    }
-    if (has(P.phone)) {
-      tiles.push(`
-        <div class="tile" data-reveal style="--d:60ms">
-          <span class="tile-icon">${icon('phone')}</span>
-          <p class="tile-label">Phone</p>
-          <a class="tile-value" href="tel:${esc(digits(P.phone))}">${esc(P.phone)}</a>
-          <div class="tile-actions">
-            <a class="chip-btn" href="tel:${esc(digits(P.phone))}">${icon('phone')}Call</a>
-            <a class="chip-btn" href="sms:${esc(digits(P.phone))}">${icon('message')}Text</a>
-            <button class="chip-btn" type="button" data-copy="${esc(P.phone)}" data-copy-label="Phone number">${icon('copy')}Copy</button>
-          </div>
-        </div>`);
-    }
-    if (has(P.location)) {
-      tiles.push(`
-        <div class="tile" data-reveal style="--d:120ms">
-          <span class="tile-icon">${icon('pin')}</span>
-          <p class="tile-label">Location</p>
-          <span class="tile-value">${esc(P.location)}</span>
-          ${has(P.locationNote) ? `<p class="tile-note">${esc(P.locationNote)}</p>` : ''}
-          <div class="tile-actions">
-            <a class="chip-btn" href="https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(P.location)}" target="_blank" rel="noopener">${icon('map')}View map</a>
-          </div>
-        </div>`);
-    }
+    const tel = digits(P.phone || '');
+    const copyBtn = (text, what) =>
+      `<button class="icon-btn row-btn" type="button" data-copy="${esc(text)}" data-copy-label="${what}" aria-label="Copy ${what.toLowerCase()}" title="Copy">${icon('copy')}</button>`;
+    const textBtn = `<a class="icon-btn row-btn" href="sms:${esc(tel)}" aria-label="Send a text" title="Text">${icon('message')}</a>`;
+    const rows = [
+      has(P.email) && {
+        href: `mailto:${P.email}`, icon: 'mail', value: P.email, label: 'Email',
+        actions: copyBtn(P.email, 'Email address'),
+      },
+      has(P.phone) && {
+        href: `tel:${tel}`, icon: 'phone', value: P.phone, label: 'Call or text',
+        actions: textBtn + copyBtn(P.phone, 'Phone number'),
+      },
+      has(P.location) && {
+        href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(P.location)}`,
+        icon: 'pin', value: P.location, label: has(P.locationNote) ? P.locationNote : 'Location', external: true,
+      },
+      ...socials.map((s) => ({ href: s.url, icon: s.icon, value: s.label, label: s.handle, external: true, me: true })),
+    ].filter(Boolean);
     return `
       <div class="container">
         <header class="section-head" data-reveal>
           ${sectionHead(num('contact'), 'Contact', 'How to Reach Me', 'contact-title', P.contactNote)}
         </header>
-        <div class="contact-grid">${tiles.join('')}</div>
-        ${socials.length ? `
-          <div class="social-grid">
-            ${socials.map((s, i) => `
-              <a class="social-card" href="${esc(s.url)}" target="_blank" rel="noopener me" data-reveal style="--d:${i * 60}ms">
-                ${icon(s.icon)}
-                <span class="social-text"><strong>${esc(s.label)}</strong><span>${esc(s.handle)}</span></span>
-                <svg class="icon arrow" viewBox="0 0 24 24" aria-hidden="true">${ICONS.arrow}</svg>
-              </a>`).join('')}
-          </div>` : ''}
+        <ul class="contact-list">
+          ${rows.map((r, i) => `
+            <li class="contact-row" data-reveal style="--d:${i * 40}ms">
+              <a class="contact-main" href="${esc(r.href)}"${r.external ? ` target="_blank" rel="noopener${r.me ? ' me' : ''}"` : ''}>
+                <span class="contact-circle">${icon(r.icon)}</span>
+                <span class="contact-text">
+                  <span class="contact-value">${esc(r.value)}</span>
+                  <span class="contact-label">${esc(r.label)}</span>
+                </span>
+                ${r.external ? `<svg class="icon arrow" viewBox="0 0 24 24" aria-hidden="true">${ICONS.arrow}</svg>` : ''}
+              </a>
+              ${r.actions ? `<span class="contact-actions">${r.actions}</span>` : ''}
+            </li>`).join('')}
+        </ul>
         <div class="contact-cta" data-reveal>
           ${FILES.vcf ? `<a class="btn btn-primary btn-lg" href="${esc(FILES.vcf)}">${icon('userPlus')}Save my contact card</a>` : ''}
           <button class="btn btn-lg" type="button" data-share>${icon('qr')}Share this page</button>
@@ -620,33 +616,27 @@
       toggle.setAttribute('aria-expanded', String(open));
     };
     toggle.addEventListener('click', () => setOpen(!wrap.classList.contains('is-open')));
-    document.addEventListener('click', (e) => { if (!wrap.contains(e.target)) setOpen(false); });
+    // A tap or click anywhere else closes it. iPhones don't send "click" for taps on plain text or
+    // background, so pointerdown covers those.
+    const closeIfOutside = (e) => { if (!wrap.contains(e.target)) setOpen(false); };
+    document.addEventListener('pointerdown', closeIfOutside);
+    document.addEventListener('click', closeIfOutside);
     wrap.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && wrap.classList.contains('is-open')) { setOpen(false); toggle.focus(); }
     });
     // Keyboard users tabbing past the list close it (mouse clicks on items are handled below)
     wrap.addEventListener('focusout', (e) => { if (e.relatedTarget && !wrap.contains(e.relatedTarget)) setOpen(false); });
-    $('.reach-menu', wrap).addEventListener('click', (e) => { if (e.target.closest('a, button')) setTimeout(() => setOpen(false), 150); });
+    // Choosing an item closes the menu; if focus was on that item (keyboard), hand it back to the button
+    // so it isn't left on a hidden link (e.g. after "Share / QR code" or a theme switch)
+    $('.reach-menu', wrap).addEventListener('click', (e) => {
+      if (!e.target.closest('a, button')) return;
+      setTimeout(() => {
+        const hadFocus = $('.reach-menu', wrap).contains(document.activeElement);
+        setOpen(false);
+        if (hadFocus) toggle.focus();
+      }, 150);
+    });
   });
-
-  // Business card: flip + gentle tilt that follows the mouse
-  const card = $('.bcard');
-  card?.addEventListener('click', () => card.setAttribute('aria-pressed', String(card.classList.toggle('is-flipped'))));
-  const scene = $('.bcard-scene');
-  const tilt = $('.bcard-tilt');
-  if (scene && tilt && !reducedMotion && matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    scene.addEventListener('pointermove', (e) => {
-      const r = scene.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width - 0.5;
-      const y = (e.clientY - r.top) / r.height - 0.5;
-      tilt.style.setProperty('--ry', `${(x * 12).toFixed(2)}deg`);
-      tilt.style.setProperty('--rx', `${(-y * 10).toFixed(2)}deg`);
-    });
-    scene.addEventListener('pointerleave', () => {
-      tilt.style.setProperty('--rx', '0deg');
-      tilt.style.setProperty('--ry', '0deg');
-    });
-  }
 
   // Share dialog with a downloadable QR code
   const fileBase = String(P.name || 'my-site').replace(/[^\w\- ]/g, '').trim().replace(/\s+/g, '-') || 'my-site';
@@ -701,64 +691,8 @@
     });
   });
 
-  // Résumé popup: downloads first, then a small blurred thumbnail with a "Preview" button.
-  // Only when Preview is pressed does the full-size page image load and the thumbnail grow into it.
-  const resumeDialog = $('#resume-dialog');
-  const docName = has(P.resume?.nameOnDocument) ? P.resume.nameOnDocument : P.name;
-  const fillResume = () => {
-    $('[data-resume-actions]', resumeDialog).innerHTML = [
-      FILES.pdf && `<a class="btn btn-primary" href="${esc(FILES.pdf)}" download>${icon('download')}Download PDF</a>`,
-      FILES.docx && `<a class="btn" href="${esc(FILES.docx)}" download>${icon('download')}Download Word</a>`,
-    ].filter(Boolean).join('');
-    const area = $('[data-resume-preview]', resumeDialog);
-    const fulls = arr(FILES.previews);
-    const thumbs = arr(FILES.previewThumbs);
-    area.classList.remove('is-expanded', 'is-sharp');
-    area.innerHTML = fulls.length
-      ? `<div class="rp-page">
-           <img class="rp-img" src="${esc(thumbs[0] || fulls[0])}" alt="" width="1275" height="1650" decoding="async">
-           <button class="btn rp-open" type="button">${icon('eye')}Preview</button>
-         </div>
-         <div class="rp-more"></div>`
-      : '<p class="resume-preview-empty">A preview isn’t available right now, but both downloads above work.</p>';
-  };
-  const expandPreview = (area) => {
-    const fulls = arr(FILES.previews);
-    const img = $('.rp-img', area);
-    area.classList.add('is-expanded');
-    img.alt = `Preview of ${docName}’s résumé${fulls.length > 1 ? ', page 1' : ''}`;
-    if (FILES.pdf) img.title = 'Open full size';
-    // Swap in the sharp image once it has loaded, then lift the blur (no flash of a low-res page)
-    const full = new Image();
-    full.onload = () => { img.src = full.src; area.classList.add('is-sharp'); };
-    full.onerror = () => area.classList.add('is-sharp');
-    full.src = fulls[0];
-    $('.rp-more', area).innerHTML = fulls.slice(1)
-      .map((src, i) => `<img src="${esc(src)}" alt="Preview of ${esc(docName)}’s résumé, page ${i + 2}" width="1275" height="1650" loading="lazy">`).join('');
-    area.focus({ preventScroll: true });
-  };
-  resumeDialog?.addEventListener('click', (e) => {
-    const area = $('[data-resume-preview]', resumeDialog);
-    if (!area || !area.contains(e.target)) return;
-    if (!area.classList.contains('is-expanded')) {
-      if (e.target.closest('.rp-open, .rp-page')) expandPreview(area);
-    } else if (e.target.closest('.rp-img, .rp-more img') && FILES.pdf) {
-      window.open(FILES.pdf, '_blank', 'noopener');   // full-size PDF (handy for zooming on a phone)
-    }
-  });
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('[data-resume-open]') || !resumeDialog) return;
-    fillResume();
-    openDialog(resumeDialog);
-    $('[data-resume-preview]', resumeDialog).scrollTop = 0;
-  });
-
-  // Once the QR library arrives, draw the codes that were showing "Loading…"
-  qrReady.then(() => {
-    const cardQr = $('.bcard-qr');
-    if (cardQr) cardQr.innerHTML = qrMarkup(pageUrl(), 2);
-    if (dialog.open) fillShare();
-  });
+  // If the share popup opened before the QR library arrived, draw the code that was "Loading…"
+  qrReady.then(() => { if (dialog.open) fillShare(); });
   $('[data-copy-link]', dialog).addEventListener('click', () => copyText(pageUrl(), 'Link'));
   $('[data-native-share]', dialog).addEventListener('click', () => {
     navigator.share({ title: document.title, text: P.seoDescription || P.tagline || '', url: pageUrl() }).catch(() => {});
@@ -772,25 +706,90 @@
     if (blob) downloadBlob(blob, `${fileBase}-QR.png`);
   });
 
-  // Top bar border once scrolled
-  const topbar = $('#topbar');
-  const onScroll = () => topbar.classList.toggle('is-scrolled', scrollY > 8);
-  addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
-
   // Highlight the section you're reading in the nav + tab bar
   const navLinks = $$('[data-nav]');
+  const atTop = () => scrollY < 8;
+  const setActive = (id) => navLinks.forEach((a) => {
+    const on = a.dataset.nav === id;
+    a.classList.toggle('is-active', on);
+    if (on) a.setAttribute('aria-current', 'true');
+    else a.removeAttribute('aria-current');
+  });
+
+  // Top bar border once scrolled. At the very top, Home is the current section even on tall
+  // screens where the short intro leaves About across the middle of the view.
+  const topbar = $('#topbar');
+
+  // Phones: the row with your name and "⋯" slides up out of view while scrolling down, leaving just
+  // the section tabs pinned at the top, and slides back once you scroll up a little.
+  const phoneBar = matchMedia('(max-width: 759px)');
+  const topNav = $('.nav', topbar);
+  const moreWrap = $('.more', topbar);
+  const TUCK_AFTER = 90;    // px from the top before the row starts hiding
+  const SHOW_AFTER = 48;    // px of upward scrolling that brings it back
+  let tucked = false;
+  let lastY = scrollY;
+  let upTravel = 0;
+  // How far the bar moves: everything above the tabs, keeping a 6px strip of bar above them
+  const measureTuck = () => {
+    const shift = phoneBar.matches && topNav ? Math.max(0, topNav.offsetTop - 6) : 0;
+    topbar.style.setProperty('--tuck', `${shift}px`);
+    return shift;
+  };
+  let tuckShift = measureTuck();
+  const setTucked = (on) => {
+    if (on === tucked) return;
+    tucked = on;
+    topbar.classList.toggle('is-tucked', on);
+    if (on && moreWrap?.classList.contains('is-open')) $('.more-toggle', moreWrap).click();   // close the ⋯ menu with it
+  };
+  const onScroll = () => {
+    const y = scrollY;
+    const prevY = lastY;
+    lastY = y;
+    topbar.classList.toggle('is-scrolled', !atTop());
+    if (atTop()) setActive('home');
+    if (!phoneBar.matches || y < TUCK_AFTER) { upTravel = 0; setTucked(false); return; }
+    if (y > prevY) { upTravel = 0; setTucked(true); }
+    else if (y < prevY) {
+      // Ignore the iPhone "bounce" past the bottom of the page settling back: that isn't scrolling up
+      const maxY = document.documentElement.scrollHeight - innerHeight;
+      if (prevY > maxY) return;
+      upTravel += prevY - y;
+      if (upTravel >= SHOW_AFTER) setTucked(false);
+    }
+  };
+  addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  const remeasure = () => { tuckShift = measureTuck(); if (!phoneBar.matches) setTucked(false); };
+  addEventListener('resize', remeasure);
+  phoneBar.addEventListener?.('change', remeasure);
+  // Keyboard users tabbing to the name or ⋯ get the row back
+  topbar.addEventListener('focusin', (e) => { if (!topNav?.contains(e.target)) setTucked(false); });
+
+  // Jumping to a section (tabs, name, "Back to top"): leave room for the bar as it will be when the
+  // jump ends. Moving down tucks the row, and a short move up keeps it tucked, so those leave room for
+  // just the tabs; a longer move up brings the row back, so that leaves room for the full bar.
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href^="#"]');
+    const id = link ? link.getAttribute('href').slice(1) : '';
+    const target = id && document.getElementById(id);
+    if (!target) return;
+    if (!phoneBar.matches) { root.style.scrollPaddingTop = ''; return; }
+    const full = topbar.offsetHeight + 12;
+    const slim = full - tuckShift;
+    const top = target.getBoundingClientRect().top;
+    const here = tucked ? slim : full;   // where a section sits when you're already on it
+    if (Math.abs(top - here) < 3) { e.preventDefault(); return; }   // tapping the tab you're on: stay put
+    let endsTucked = top > here || (tucked && here - top < SHOW_AFTER);
+    if (endsTucked && scrollY + top - slim < TUCK_AFTER) endsTucked = false;   // lands near the top: row shows
+    root.style.scrollPaddingTop = `${endsTucked ? slim : full}px`;
+  });
+
   if ('IntersectionObserver' in window) {
     const spy = new IntersectionObserver((entries) => {
-      entries.forEach((en) => {
-        if (!en.isIntersecting) return;
-        navLinks.forEach((a) => {
-          const on = a.dataset.nav === en.target.id;
-          a.classList.toggle('is-active', on);
-          if (on) a.setAttribute('aria-current', 'true');
-          else a.removeAttribute('aria-current');
-        });
-      });
+      entries.forEach((en) => { if (en.isIntersecting) setActive(en.target.id); });
+      if (atTop()) setActive('home');
     }, { rootMargin: '-45% 0px -50% 0px' });
     ['home', 'about', 'resume', 'contact']
       .map((id) => document.getElementById(id))

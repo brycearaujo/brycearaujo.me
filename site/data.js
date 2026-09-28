@@ -2,7 +2,7 @@
 window.PROFILE = {
   "_instructions": [
     "This one file holds ALL of the content for your website AND your downloadable resume.",
-    "Edit the text, then double-click build.cmd. It rebuilds the site, the resume PDF + Word files, and the contact card.",
+    "Edit the text, then double-click build.cmd. It rebuilds the site, the resume PDF, and the contact card.",
     "In bullets, wrap a lead-in in double asterisks to make it bold: \"**Front end:** own the web app\".",
     "\"inDocument\": false on an education, experience or volunteer entry shows it on the website only, not on the formal resume.",
     "\"skills\" is the short list on the formal resume; \"webSkills\" is the more detailed list on the website.",
@@ -16,16 +16,15 @@ window.PROFILE = {
   "firstName": "Bryce",
   "pronouns": "",
   "headline": "",
-  "tagline": "I’m a Business Technology Administration student at UMBC and a part-time Development & Product Intern at MagView, where I’m one of the two original developers of Maven, the company’s first AI voice agent. When I’m not at school or work, I’m lifting in the gym, skiing in the winter, wakeboarding in the summer, working on and driving my C5 Corvette, or enjoying quality time with my family and friends.",
+  "tagline": "",
   "seoDescription": "Bryce Araujo: Business Technology Administration student at UMBC and part-time Development & Product Intern at MagView, co-building Maven, the company’s first AI voice agent.",
   "status": { "open": true, "text": "" },
-  "card": { "subtitle": "Business Technology Administration · UMBC" },
 
   "location": "Burtonsville, MD",
   "locationNote": "",
   "email": "brycejaraujo@gmail.com",
   "phone": "240-360-6065",
-  "website": "",
+  "website": "https://brycearaujo.github.io/brycearaujo.me/",
   "photo": "",
 
   "links": {
@@ -42,11 +41,11 @@ window.PROFILE = {
     "chapters": [
       {
         "label": "Background",
-        "text": "I’m based in Burtonsville, Maryland. From 2018 to 2024, I volunteered at Shepherd’s Table, serving meals and distributing food boxes to families during COVID-19, and I spent two summers as a teacher’s primary aide at the Forcey Christian School art camp."
+        "text": "I’m a Business Technology Administration student at UMBC and a part-time Development & Product Intern at MagView, where I’m one of the two original developers of Maven, the company’s first AI voice agent. When I’m not at school or work, I’m lifting in the gym, skiing in the winter, wakeboarding in the summer, working on and driving my C5 Corvette, or enjoying quality time with my family and friends."
       },
       {
         "label": "Education",
-        "text": "I graduated from Springbrook High School in May 2023 through its Academy of Information Technology (AOIT) program, earning my Cisco CCNA certification and interning at MagView while still in high school. At UMBC, I’m working toward a B.S. in Business Technology Administration, expected in May 2027, with a 3.6 GPA and four semesters on the Dean’s List."
+        "text": "At UMBC, I’m working toward a B.S. in Business Technology Administration, expected in May 2027. I have a 3.6 GPA and four semesters on the Dean’s List, and my coursework includes Management Information Systems, Systems Analysis Methods, Foundations of Data Science, and Applied Statistics for Business & Economics. Before UMBC, I graduated from Springbrook High School’s Academy of Information Technology (AOIT) program in May 2023 with my Cisco CCNA."
       },
       {
         "label": "Experience",
@@ -97,14 +96,13 @@ window.PROFILE = {
     {
       "school": "Springbrook High School",
       "location": "",
-      "degree": "Academy of Information Technology (AOIT) program graduate",
+      "degree": "Academy of Information Technology (AOIT) program",
       "dates": "Graduated May 2023",
       "gpa": "",
       "honors": "Cisco CCNA (2023)",
       "details": [],
-      "webDetails": [
-        "High school internship: Systems Administrator Intern at MagView, starting September 2022"
-      ],
+      "webDetails": [],
+      "brief": true,
       "inDocument": false
     }
   ],
@@ -204,8 +202,9 @@ window.PROFILE = {
   ],
 
   "theme": {
-    "accent": "#E4572E",
+    "accent": "#722F37",
+    "accent2": "#C68E4F",
     "resumeAccent": "#1F3A5F"
   }
 };
-window.PROFILE_FILES = {"pdf":"files/Bryce-Araujo-Resume.pdf","docx":"files/Bryce-Araujo-Resume.docx","vcf":"files/Bryce-Araujo.vcf","updated":"September 2026","previews":["files/Bryce-Araujo-Resume-preview-1.png"],"previewThumbs":["files/Bryce-Araujo-Resume-preview-thumb-1.png"]};
+window.PROFILE_FILES = {"pdf":"files/Bryce-Araujo-Resume.pdf","vcf":"files/Bryce-Araujo.vcf","updated":"September 2026"};

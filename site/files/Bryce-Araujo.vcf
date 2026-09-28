@@ -7,12 +7,14 @@ ORG:MagView (Applied Software Inc.)
 EMAIL;TYPE=INTERNET,PREF:brycejaraujo@gmail.com
 TEL;TYPE=CELL,VOICE:240-360-6065
 ADR;TYPE=HOME:;;;Burtonsville;MD;;
+URL:https://brycearaujo.github.io/brycearaujo.me/
 item1.URL:https://www.linkedin.com/in/brycejaraujo
 item1.X-ABLabel:LinkedIn
 item2.URL:https://github.com/brycearaujo
 item2.X-ABLabel:GitHub
 item3.URL:https://app.joinhandshake.com/profiles/5z76a3
 item3.X-ABLabel:Handshake
-NOTE:B.S.\, Business Technology Administration\, University of Maryland\, B
- altimore County (UMBC)\, Expected May 2027
+NOTE:B.S.\, Business Technology Administration (Expected May 2027)\nUnivers
+ ity of Maryland\, Baltimore County (UMBC)\nRésumé and more: https://bryc
+ earaujo.github.io/brycearaujo.me/
 END:VCARD
