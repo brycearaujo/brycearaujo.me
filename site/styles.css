@@ -7,7 +7,7 @@
 :root {
   --bg: #F0EAD6;          /* eggshell */
   --bg-2: #E7DEC6;        /* deeper eggshell (alternate sections) */
-  --surface: #FFFCF5;     /* off-white (cards) */
+  --surface: #F8F2E3;     /* warm eggshell-white (cards): lighter than the page, but not bright white */
   --ink: #3A281C;         /* coffee brown: body text */
   --ink-2: #5B4636;       /* lighter coffee: secondary text */
   --ink-3: #6F5A48;       /* milky coffee: small labels */
@@ -24,7 +24,7 @@
   --accent-soft: #EFDDBF; /* peanut-butter tint: icon circles */
   --accent-2: #C68E4F;    /* peanut butter: timeline dots, glow (decorative) */
   --on-accent: #FAF6EB;
-  --nav-on: #FFFCF5;      /* the highlighted section tab */
+  --nav-on: #F8F2E3;      /* the highlighted section tab (same warm white as the cards) */
   --on-nav-on: #3A281C;
   --ok: #2E9E5B;
   --shadow-sm: 0 1px 2px rgb(42 29 21 / .07);
