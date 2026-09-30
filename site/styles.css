@@ -210,7 +210,7 @@ p { text-wrap: pretty; }
 .topbar :focus-visible { outline-color: var(--on-hdr); }   /* the wine focus ring would vanish on the wine bar */
 /* The bar's own controls never count as hidden under the bar (html's scroll-padding-top made the browser scroll the
    page up about half a screen whenever one was focused) */
-.topbar :is(a, button) { scroll-margin-top: calc(-1 * (var(--topbar-h) + 12px)); }
+.topbar :is(a, button, [tabindex]) { scroll-margin-top: calc(-1 * (var(--topbar-h) + 12px)); }
 /* Icon buttons on the wine bar (QR and theme on desktop, QR on phones): cream on a light wash */
 .topbar .icon-btn {
   background: color-mix(in oklab, var(--on-hdr) 12%, transparent);
@@ -285,7 +285,8 @@ p { text-wrap: pretty; }
   }
   .wheel-menu.reach.is-open .reach-menu { clip-path: inset(0 -1px -1px -1px); }
   .wheel-menu li + li { margin-top: 0; }
-  .wheel-menu li:has(> .reach-item[aria-current]) { display: none; }
+  .wheel-menu li:has(> .reach-item[data-here]) { display: none; }   /* fixed when the menu opens, so rows don't reshuffle as it closes */
+  .wheel-menu .reach-item:focus-visible { outline-offset: -4px; border-radius: 8px; }
   .wheel-menu .reach-item {
     justify-content: center; padding: 10px 4px; border-radius: 0;
     color: color-mix(in oklab, var(--on-hdr) 88%, transparent); font-size: 16px;

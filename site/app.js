@@ -789,6 +789,8 @@
   });
   const wheelScroller = document.createElement('div');
   wheelScroller.className = 'wheel-scroller'; wheelScroller.setAttribute('aria-hidden', 'true'); wheelScroller.append(...wheelLinks);
+  wheelScroller.tabIndex = -1;   // the strip itself is never a Tab stop (the box around it is the button)
+  wheelScroller.addEventListener('focus', () => wheel?.focus({ preventScroll: true }));
   wheel?.append(wheelScroller);
   if (wheelMenu) wheelMenu.innerHTML = navLinks.map((a, i) => `<li style="--i:${i}"><a class="reach-item" href="${a.getAttribute('href')}" data-go="${a.dataset.nav}"><span class="reach-label">${esc(a.textContent)}</span></a></li>`).join('');
   const wheelItems = wheelMenu ? $$('a[data-go]', wheelMenu) : [];
@@ -939,12 +941,17 @@
       e.preventDefault();
       jumpTo(item.dataset.go);
     });
+    // When the menu opens, note which section is hidden from it (the box already shows it); that stays put while it closes
+    wheel.addEventListener('click', () => {
+      if (wheel.parentElement.classList.contains('is-open')) wheelItems.forEach((w) => w.toggleAttribute('data-here', w.hasAttribute('aria-current')));
+    });
     wheel.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); wheel.click(); return; }
       const step = { ArrowLeft: -1, ArrowRight: 1 }[e.key];
       const next = step && wheelLinks[indexOf(currentId) + step];
       if (!next) return;
       e.preventDefault();
+      if (wheel.parentElement.classList.contains('is-open')) wheel.click();   // the arrows close the menu, like a swipe
       jumpTo(next.dataset.wheel);
     });
   }
