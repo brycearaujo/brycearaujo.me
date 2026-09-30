@@ -80,6 +80,7 @@ window.PROFILE = {
   "education": [
     {
       "school": "University of Maryland, Baltimore County (UMBC)",
+      "logo": "img/logos/umbc.png",
       "location": "",
       "degree": "B.S., Business Technology Administration",
       "dates": "Expected May 2027",
@@ -94,6 +95,7 @@ window.PROFILE = {
     },
     {
       "school": "Springbrook High School",
+      "logo": "img/logos/springbrook.png",
       "location": "",
       "degree": "Academy of Information Technology (AOIT) program",
       "dates": "Graduated May 2023",
@@ -110,6 +112,7 @@ window.PROFILE = {
     {
       "title": "Development & Product Intern",
       "org": "MagView (Applied Software Inc.)",
+      "logo": "img/logos/magview.png",
       "location": "Fulton, MD",
       "dates": "July 2026 – Present",
       "bullets": [
@@ -123,6 +126,7 @@ window.PROFILE = {
     {
       "title": "Business & Data Analyst Intern",
       "org": "MagView (Applied Software Inc.)",
+      "logo": "img/logos/magview.png",
       "location": "Fulton, MD",
       "dates": "June 2026 – July 2026",
       "bullets": [
@@ -135,6 +139,7 @@ window.PROFILE = {
     {
       "title": "Data Analyst Intern",
       "org": "MagView (Applied Software Inc.)",
+      "logo": "img/logos/magview.png",
       "location": "Fulton, MD",
       "dates": "June 2025 – August 2025",
       "bullets": [
@@ -147,6 +152,7 @@ window.PROFILE = {
     {
       "title": "Systems Administrator Intern",
       "org": "MagView (Applied Software Inc.)",
+      "logo": "img/logos/magview.png",
       "location": "Fulton, MD",
       "dates": "September 2022 – August 2023",
       "bullets": [
@@ -160,6 +166,7 @@ window.PROFILE = {
   "volunteer": [
     {
       "title": "Shepherd’s Table",
+      "logo": "img/logos/shepherds-table.png",
       "org": "Volunteer",
       "location": "",
       "dates": "November 2018 – July 2024",
@@ -170,6 +177,7 @@ window.PROFILE = {
     },
     {
       "title": "Forcey Christian School Art Camp",
+      "logo": "img/logos/forcey.png",
       "org": "Teacher’s Primary Aide",
       "location": "",
       "dates": "Summers 2021 & 2022",

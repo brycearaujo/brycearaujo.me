@@ -347,9 +347,11 @@
       ${pills ? `<div class="fold-pills">${pills}</div>` : ''}`;
   };
 
-  const roleHead = (x, tag, id) => `
+  // An organisation's logo (profile.json "logo"), on a small light tile to the left of its name. Decorative: the name follows.
+  const orgLogo = (x) => (has(x?.logo) ? `<img class="org-logo" src="${esc(x.logo)}" alt="" width="46" height="46" decoding="async">` : '');
+  const roleHead = (x, tag, id, logo = '') => `
     <div class="tl-meta">
-      <${tag} class="tl-title">${id ? foldButton(x.title, id) : esc(x.title)}</${tag}>
+      <${tag} class="tl-title">${logo}${id ? foldButton(x.title, id) : esc(x.title)}</${tag}>
       ${has(x.dates) ? `<span class="tl-dates">${esc(x.dates)}</span>` : ''}
     </div>`;
   const tagList = (x) =>
@@ -375,13 +377,13 @@
           ${g.length === 1 ? `
             <article class="tl-card${roleDetail(g[0]) ? ' foldable' : ''}">
               ${fold((id) => `
-                ${roleHead(g[0], 'h4', id)}
+                ${roleHead(g[0], 'h4', id, orgLogo(g[0]))}
                 ${has(g[0].org) || has(g[0].location) ? `<p class="tl-org">${[g[0].org, g[0].location].filter(has).map(esc).join(' <span aria-hidden="true">·</span> ')}</p>` : ''}`,
               roleDetail(g[0]), tagList(g[0]))}
             </article>` : `
             <article class="tl-card tl-group">
               <header class="tl-employer">
-                <h4 class="tl-employer-name">${esc(g[0].org)}</h4>
+                <h4 class="tl-employer-name">${orgLogo(g[0])}${esc(g[0].org)}</h4>
                 ${has(g[0].location) ? `<span class="tl-employer-loc">${esc(g[0].location)}</span>` : ''}
               </header>
               ${g.map((x) => `
@@ -416,7 +418,7 @@
   const eduCard = (e) => {
     if (e.brief) return `
       <article class="edu edu--brief" data-reveal>
-        <h4 class="edu-school">${esc(e.school)}</h4>
+        <h4 class="edu-school">${orgLogo(e)}${esc(e.school)}</h4>
         <p class="edu-degree">${[e.degree, e.dates, e.honors].filter(has).map(esc).join(' <span aria-hidden="true">·</span> ')}</p>
       </article>`;
     const details = [...arr(e.details), ...arr(e.webDetails)];
@@ -425,7 +427,7 @@
     return `
       <article class="edu${detail ? ' foldable' : ''}" data-reveal>
         ${fold((id) => `
-          <h4 class="edu-school">${id ? foldButton(e.school, id) : esc(e.school)}</h4>
+          <h4 class="edu-school">${orgLogo(e)}${id ? foldButton(e.school, id) : esc(e.school)}</h4>
           <p class="edu-degree">${esc(e.degree)}</p>`,
         detail, badges.length ? `<ul class="badges">${badges.map((b) => `<li class="badge">${esc(b)}</li>`).join('')}</ul>` : '')}
       </article>`;
