@@ -60,7 +60,6 @@
     x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
     arrow: '<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',
     chevron: '<path d="m6 9 6 6 6-6"/>',
-    dots: '<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>',
     compass: '<circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>',
     send: '<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>',
     message: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
@@ -74,11 +73,33 @@
     link: '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
     linkedin: '<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/>',
     instagram: '<rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>',
-    handshake: '<path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/>',
     github: '<path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/>',
   };
   const icon = (name) =>
     `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${ICONS[name] || ICONS.link}</svg>`;
+
+  // Solid marks for the contact circles: the real Gmail, Google Maps, LinkedIn, GitHub and Handshake logos and Apple's
+  // phone handset, as silhouettes in the circle's dark brown (currentColor); cut-outs show the light-brown circle
+  // (.logo-mark in styles.css). LinkedIn and GitHub are the official marks from Simple Icons (simpleicons.org, CC0);
+  // the handset is traced from Apple's Phone app icon; Gmail, the Maps pin and Handshake's H are traced from the brands'
+  // own logos. at() scales each one about the centre so they look the same size (about 20-21px across in the 26px mark).
+  const svg24 = (inner) => `<svg class="logo-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${inner}</svg>`;
+  const at = (k, inner, cy = 12) => `<g transform="translate(12 ${cy}) scale(${k}) translate(-12 -${cy})">${inner}</g>`;
+  const BRANDS = {
+    gmail: () => svg24(at(.92, '<path fill="currentColor" d="M2 6.3h4.29v12.62a.7.7 0 0 1-.7.7H2.7a.7.7 0 0 1-.7-.7zM17.71 6.3H22v12.62a.7.7 0 0 1-.7.7h-2.89a.7.7 0 0 1-.7-.7z"/><path fill="none" stroke="currentColor" stroke-width="4.11" stroke-linecap="round" stroke-linejoin="round" d="M4.13 6.5 11.96 12.99 19.87 6.5"/>')),
+    maps: () => svg24(at(.92, '<path fill="currentColor" fill-rule="evenodd" d="M18.3 15.02C16.9 16.7 13.5 19.6 12.72 21.6C12.5 22.6 11.5 22.6 11.28 21.6C10.5 19.6 7.1 16.7 5.7 15.02A8.23 8.23 0 1 1 18.3 15.02ZM7.6 9.73a4.4 4.4 0 1 0 8.8 0a4.4 4.4 0 1 0 -8.8 0Z"/>')),
+    linkedin: () => svg24(at(.77, '<path fill="currentColor" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>')),
+    github: () => svg24(at(.8, '<path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>', 12.3)),
+    // Handshake: just its slanted H (crossbar rising to the right), without the tile
+    handshake: () => svg24(at(1.25, '<path fill="currentColor" d="M9.636 4.3H12.1L10.683 12.462L13.579 9.998L14.564 4.3H17.028L14.356 19.7H11.892L13.132 12.539L10.244 15.003L9.428 19.7H6.964Z"/>')),
+    // Apple's handset: its weight sits low-left, so it's nudged up-right a little to look centred
+    phone: () => svg24(`<g transform="translate(.6 -.6)">${at(.86, '<path fill="currentColor" d="M3.03 0.08C3.57 -0.08 4.14 -0 4.57 0.39C5.14 0.91 6.76 3.75 7.25 4.58C7.58 5.13 7.98 5.65 7.89 6.34C7.73 7.67 6.25 8.76 6.59 10.17C6.83 11.16 8.73 13.05 9.47 13.81C10.28 14.63 12.63 17 13.59 17.35C15.21 17.93 16.33 16.16 17.87 16.14C18.9 16.13 19.91 17.08 20.75 17.59C21.37 17.97 21.97 18.37 22.59 18.75C24.1 19.68 24.42 20.36 23.43 21.98C23.2 22.34 22.95 22.66 22.63 22.95C20.48 24.98 16.97 23.75 14.7 22.58C10.04 20.18 5.74 16.09 2.83 11.73C2.2 10.79 1.69 9.81 1.16 8.82C-0.37 5.92 -0.88 1.29 3.03 0.08Z"/>')}</g>`),
+    // Not linked today; here so an Instagram link added in profile.json gets a solid mark like the rest
+    instagram: () => svg24(at(.92, '<path fill="currentColor" fill-rule="evenodd" d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2.3A2.7 2.7 0 0 0 4.3 7v10A2.7 2.7 0 0 0 7 19.7h10a2.7 2.7 0 0 0 2.7-2.7V7A2.7 2.7 0 0 0 17 4.3ZM12 7a5 5 0 1 1 0 10a5 5 0 1 1 0-10Zm0 2.3a2.7 2.7 0 1 0 0 5.4a2.7 2.7 0 1 0 0-5.4Z"/><circle cx="17.4" cy="6.6" r="1.4" fill="currentColor"/>')),
+  };
+  // A brand mark when there is one; any other link gets a bold link glyph in the same weight
+  const mark = (name) => (BRANDS[name] ? BRANDS[name]()
+    : svg24(at(.9, '<path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>')));
 
   /* ---------------------------------------------------------------- socials */
   const SOCIAL = {
@@ -179,10 +200,8 @@
   const aboutHobbies = arr(aboutData.hobbies).filter((h) => has(h?.name));
   // ("Where I'm headed" renders in the Résumé section, so it doesn't count toward About)
   const hasAbout = aboutChapters.length > 0 || aboutNumbers.length > 0 || aboutHobbies.length > 0 || has(P.photo);
-  const sectionOrder = [hasAbout && 'about', 'resume', 'contact'].filter(Boolean);
-  const num = (id) => String(sectionOrder.indexOf(id) + 1).padStart(2, '0');
 
-  const sectionHead = (num, label, title, id, lead = '') => `
+  const sectionHead = (title, id, lead = '') => `
     <h2 id="${id}">${title}</h2>
     ${has(lead) ? `<p class="lead">${esc(lead)}</p>` : ''}`;
 
@@ -201,7 +220,7 @@
           ${list.map((w, i) => `
             <li style="--i:${i}">
               <a class="reach-item" href="${esc(w.href)}"${w.attrs || ''}${w.hint ? ` title="${esc(w.hint)}"` : ''}>
-                <span class="reach-circle">${icon(w.icon)}</span>
+                <span class="reach-circle">${mark(w.icon)}</span>
                 <span class="reach-label">${esc(w.label)}</span>
               </a>
             </li>`).join('')}
@@ -213,7 +232,7 @@
   const contactMenu = () => dropdown({
     id: 'reach-menu', label: 'Contact me', iconName: 'message', menuLabel: `Ways to reach ${firstName}`,
     items: [
-      has(P.email) && { href: `mailto:${P.email}`, icon: 'mail', label: P.email, hint: 'Email' },
+      has(P.email) && { href: `mailto:${P.email}`, icon: 'gmail', label: P.email, hint: 'Email' },
       has(P.phone) && { href: `tel:${digits(P.phone)}`, icon: 'phone', label: P.phone, hint: 'Call' },
       ...socials.map((s) => ({ href: s.url, icon: s.icon, label: s.label, attrs: ' target="_blank" rel="noopener me"' })),
     ],
@@ -263,7 +282,7 @@
     return `
       <div class="container">
         <header class="section-head" data-reveal>
-          ${sectionHead(num('about'), 'About me', 'Who am I?', 'about-title')}
+          ${sectionHead('Who am I?', 'about-title')}
         </header>
         <div class="about-grid${hasSide ? '' : ' about-grid--single'}">
           <div class="chapters">
@@ -300,28 +319,43 @@
       </div>`;
   }
 
-  // Long entries show the first few bullets; the rest sit behind a "Show N more" toggle.
-  const bulletLimit = Math.max(1, Number(P.resume?.webBulletLimit) || 3);
+  // Folded list items: each bullet drops in with its card, then its text reveals left to right (--i staggers them)
+  const foldItem = (html, i) => `<li style="--i:${i}"><span class="li-text">${html}</span></li>`;
   const bulletList = (bullets) => {
-    const items = arr(bullets).map((b) => `<li>${rich(b)}</li>`);
-    if (!items.length) return '';
-    if (items.length <= bulletLimit + 1) return `<ul class="tl-bullets">${items.join('')}</ul>`;
-    const extra = items.length - bulletLimit;
-    return `
-      <ul class="tl-bullets">${items.slice(0, bulletLimit).join('')}</ul>
-      <details class="tl-more">
-        <summary><span class="tl-more-open">Show ${extra} more</span><span class="tl-more-close">Show less</span></summary>
-        <ul class="tl-bullets">${items.slice(bulletLimit).join('')}</ul>
-      </details>`;
+    const items = arr(bullets).map((b, i) => foldItem(rich(b), i));
+    return items.length ? `<ul class="tl-bullets">${items.join('')}</ul>` : '';
   };
 
-  const roleHead = (x, tag) => `
+  // Tap-to-expand cards: each role (and the college card) shows only its summary (title, dates, where, pills) and
+  // folds its detail away. The button in the summary's heading is stretched over the whole summary, so tapping
+  // anywhere on it opens or closes the detail (setFold under "Folding cards" below; the height animates in styles.css).
+  let foldSeq = 0;
+  const foldButton = (label, id) =>
+    `<button class="fold-toggle" type="button" aria-expanded="false" aria-controls="${id}">${esc(label)}</button>`;
+  // head(id) renders the summary (id is '' when there's nothing to fold); detail is the HTML that folds away.
+  // pills (skill tags / badges) sit just below the folded detail: under the title while closed, then carried
+  // smoothly down to the bottom of the card as the detail grows open above them.
+  const fold = (head, detail, pills = '') => {
+    if (!detail) return `<div class="fold-head">${head('')}${pills}</div>`;
+    const id = `fold-${++foldSeq}`;
+    return `
+      <div class="fold-head">
+        ${head(id)}
+        <span class="fold-chev" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" focusable="false">${ICONS.chevron}</svg></span>
+      </div>
+      <div class="fold" id="${id}"><div class="fold-inner" hidden="until-found">${detail}</div></div>
+      ${pills ? `<div class="fold-pills">${pills}</div>` : ''}`;
+  };
+
+  const roleHead = (x, tag, id) => `
     <div class="tl-meta">
-      <${tag} class="tl-title">${esc(x.title)}</${tag}>
+      <${tag} class="tl-title">${id ? foldButton(x.title, id) : esc(x.title)}</${tag}>
       ${has(x.dates) ? `<span class="tl-dates">${esc(x.dates)}</span>` : ''}
     </div>`;
   const tagList = (x) =>
     has(x.tags) ? `<ul class="tags" aria-label="Skills used">${arr(x.tags).map((t) => `<li>${esc(t)}</li>`).join('')}</ul>` : '';
+  // A role folds its bullets; its skill tags are the pills (under the title while closed, at the bottom once open)
+  const roleDetail = (x) => bulletList(x.bullets);
 
   // Back-to-back roles at the same employer and location share one card under one employer
   // heading (like the formal résumé), so the org line isn't repeated for every role.
@@ -338,13 +372,12 @@
     <ol class="timeline">
       ${byEmployer(arr(items)).map((g) => `
         <li class="tl-item" data-reveal>
-          <span class="tl-dot" aria-hidden="true"></span>
           ${g.length === 1 ? `
-            <article class="tl-card">
-              ${roleHead(g[0], 'h4')}
-              ${has(g[0].org) || has(g[0].location) ? `<p class="tl-org">${[g[0].org, g[0].location].filter(has).map(esc).join(' <span aria-hidden="true">·</span> ')}</p>` : ''}
-              ${bulletList(g[0].bullets)}
-              ${tagList(g[0])}
+            <article class="tl-card${roleDetail(g[0]) ? ' foldable' : ''}">
+              ${fold((id) => `
+                ${roleHead(g[0], 'h4', id)}
+                ${has(g[0].org) || has(g[0].location) ? `<p class="tl-org">${[g[0].org, g[0].location].filter(has).map(esc).join(' <span aria-hidden="true">·</span> ')}</p>` : ''}`,
+              roleDetail(g[0]), tagList(g[0]))}
             </article>` : `
             <article class="tl-card tl-group">
               <header class="tl-employer">
@@ -352,10 +385,8 @@
                 ${has(g[0].location) ? `<span class="tl-employer-loc">${esc(g[0].location)}</span>` : ''}
               </header>
               ${g.map((x) => `
-                <div class="tl-role">
-                  ${roleHead(x, 'h5')}
-                  ${bulletList(x.bullets)}
-                  ${tagList(x)}
+                <div class="tl-role${roleDetail(x) ? ' foldable' : ''}">
+                  ${fold((id) => roleHead(x, 'h5', id), roleDetail(x), tagList(x))}
                 </div>`).join('')}
             </article>`}
         </li>`).join('')}
@@ -380,25 +411,27 @@
     return m ? `<b>${esc(m[1])}:</b>${esc(m[2])}` : esc(text);
   };
 
-  // "brief": true (e.g. high school) shows a compact card: school plus one line, no details
-  const eduCard = (e) => e.brief ? `
-    <article class="edu edu--brief" data-reveal>
-      <h4 class="edu-school">${esc(e.school)}</h4>
-      <p class="edu-degree">${[e.degree, e.dates, e.honors].filter(has).map(esc).join(' <span aria-hidden="true">·</span> ')}</p>
-    </article>` : `
-    <article class="edu" data-reveal>
-      <h4 class="edu-school">${esc(e.school)}</h4>
-      <p class="edu-degree">${esc(e.degree)}</p>
-      <ul class="badges">
-        ${has(e.dates) ? `<li class="badge">${esc(e.dates)}</li>` : ''}
-        ${has(e.gpa) ? `<li class="badge">GPA ${esc(e.gpa)}</li>` : ''}
-        ${has(e.honors) ? `<li class="badge">${esc(e.honors)}</li>` : ''}
-        ${has(e.location) ? `<li class="badge">${esc(e.location)}</li>` : ''}
-      </ul>
-      ${[...arr(e.details), ...arr(e.webDetails)].length ? `<ul class="edu-details">${[...arr(e.details), ...arr(e.webDetails)].map((d) => `<li>${labeled(d)}</li>`).join('')}</ul>` : ''}
-    </article>`;
+  // "brief": true (e.g. high school) shows a compact card: school plus one line, no details.
+  // A full card shows school, degree and badges; its detail lines (coursework, internships) fold away.
+  const eduCard = (e) => {
+    if (e.brief) return `
+      <article class="edu edu--brief" data-reveal>
+        <h4 class="edu-school">${esc(e.school)}</h4>
+        <p class="edu-degree">${[e.degree, e.dates, e.honors].filter(has).map(esc).join(' <span aria-hidden="true">·</span> ')}</p>
+      </article>`;
+    const details = [...arr(e.details), ...arr(e.webDetails)];
+    const detail = details.length ? `<ul class="edu-details">${details.map((d, i) => foldItem(labeled(d), i)).join('')}</ul>` : '';
+    const badges = [e.dates, has(e.gpa) ? `GPA ${e.gpa}` : '', e.honors, e.location].filter(has);
+    return `
+      <article class="edu${detail ? ' foldable' : ''}" data-reveal>
+        ${fold((id) => `
+          <h4 class="edu-school">${id ? foldButton(e.school, id) : esc(e.school)}</h4>
+          <p class="edu-degree">${esc(e.degree)}</p>`,
+        detail, badges.length ? `<ul class="badges">${badges.map((b) => `<li class="badge">${esc(b)}</li>`).join('')}</ul>` : '')}
+      </article>`;
+  };
 
-  // "Where I'm headed" closes the résumé section, after the history that explains it.
+  // "Where I'm headed" follows the history that explains it (last on phones; under Volunteer on desktop).
   const headedBlock = () => {
     const asp = aboutData.aspirations || {};
     if (!has(asp.text)) return '';
@@ -420,22 +453,26 @@
       : '<p class="download-missing">The résumé PDF hasn\'t been generated yet. Run build.cmd.</p>';
     // The website can go deeper than the one-page résumé: webSkills (if present) replaces skills here
     const skillGroups = has(P.webSkills) ? P.webSkills : P.skills;
+    const timelines = (keys) => keys.filter((key) => has(P[key])).map((key) => blockTitle(key) + timeline(P[key])).join('');
+    const block = (cls, html) => (html ? `<div class="${cls}">${html}</div>` : '');
+    // Desktop: two independent columns (Experience, Volunteer, "Where I'm headed" | Education, Skills), so opening a
+    // card never opens a gap in the other column. Phones: the column wrappers dissolve and the blocks reorder to
+    // Experience, Education, Skills, Volunteer, "Where I'm headed" (styles.css, .resume-grid).
     return `
       <div class="container">
         <header class="section-head resume-head">
-          <div data-reveal>${sectionHead(num('resume'), 'Résumé', 'Experience &amp; education', 'resume-title', r.summary)}</div>
+          <div data-reveal>${sectionHead('Experience &amp; education', 'resume-title', r.summary)}</div>
           <div class="resume-cta" data-reveal style="--d:120ms">${resumeCta}</div>
         </header>
         <div class="resume-grid">
-          <div class="resume-main">
-            ${['experience', 'projects', 'leadership', 'volunteer']
-              .filter((key) => has(P[key]))
-              .map((key) => blockTitle(key) + timeline(P[key]))
-              .join('')}
+          <div class="resume-col">
+            ${block('rg-work', timelines(['experience', 'projects']))}
+            ${block('rg-later', timelines(['leadership', 'volunteer']))}
+            ${block('rg-headed', headedBlock())}
           </div>
-          <aside class="resume-side">
-            ${has(P.education) ? blockTitle('education') + arr(P.education).map(eduCard).join('') : ''}
-            ${has(skillGroups) ? `
+          <div class="resume-col">
+            ${block('rg-edu', has(P.education) ? blockTitle('education') + arr(P.education).map(eduCard).join('') : '')}
+            ${block('rg-skills', has(skillGroups) ? `
               ${blockTitle('skills')}
               <div class="skills-card" data-reveal>
                 ${arr(skillGroups).map((g) => `
@@ -443,10 +480,9 @@
                     <h4>${esc(g.group)}</h4>
                     <ul class="skill-list">${arr(g.items).map((s) => `<li>${esc(s)}</li>`).join('')}</ul>
                   </div>`).join('')}
-              </div>` : ''}
-          </aside>
+              </div>` : '')}
+          </div>
         </div>
-        ${headedBlock()}
       </div>`;
   }
 
@@ -459,7 +495,7 @@
     const textBtn = `<a class="icon-btn row-btn" href="sms:${esc(tel)}" aria-label="Send a text" title="Text">${icon('message')}</a>`;
     const rows = [
       has(P.email) && {
-        href: `mailto:${P.email}`, icon: 'mail', value: P.email, label: 'Email',
+        href: `mailto:${P.email}`, icon: 'gmail', value: P.email, label: 'Email',
         actions: copyBtn(P.email, 'Email address'),
       },
       has(P.phone) && {
@@ -468,22 +504,22 @@
       },
       has(P.location) && {
         href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(P.location)}`,
-        icon: 'pin', value: P.location, label: has(P.locationNote) ? P.locationNote : 'Location', external: true,
+        icon: 'maps', value: P.location, label: has(P.locationNote) ? P.locationNote : 'Location', external: true,
       },
       ...socials.map((s) => ({ href: s.url, icon: s.icon, value: s.label, label: s.handle, external: true, me: true })),
     ].filter(Boolean);
     return `
       <div class="container">
         <header class="section-head" data-reveal>
-          ${sectionHead(num('contact'), 'Contact', 'How to reach me', 'contact-title', P.contactNote)}
+          ${sectionHead('How to reach me', 'contact-title', P.contactNote)}
         </header>
         <ul class="contact-list">
           ${rows.map((r, i) => `
             <li class="contact-row" data-reveal style="--d:${i * 40}ms">
               <a class="contact-main" href="${esc(r.href)}"${r.external ? ` target="_blank" rel="noopener${r.me ? ' me' : ''}"` : ''}>
-                <span class="contact-circle">${icon(r.icon)}</span>
+                <span class="contact-circle">${mark(r.icon)}</span>
                 <span class="contact-text">
-                  <span class="contact-value">${esc(r.value)}</span>
+                  <span class="contact-value">${esc(r.value).replace('@', '@<wbr>')}</span>
                   <span class="contact-label">${esc(r.label)}</span>
                 </span>
                 ${r.external ? `<svg class="icon arrow" viewBox="0 0 24 24" aria-hidden="true">${ICONS.arrow}</svg>` : ''}
@@ -493,7 +529,7 @@
         </ul>
         <div class="contact-cta" data-reveal>
           ${FILES.vcf ? `<a class="btn btn-primary btn-lg" href="${esc(FILES.vcf)}">${icon('userPlus')}Save my contact card</a>` : ''}
-          <button class="btn btn-lg" type="button" data-share>${icon('qr')}Share this page</button>
+          <button class="btn btn-primary btn-lg" type="button" data-share>${icon('qr')}Share this page</button>
         </div>
       </div>`;
   }
@@ -572,7 +608,7 @@
     setTimeout(() => URL.revokeObjectURL(a.href), 4000);
   };
 
-  // Theme toggle: an icon button on desktop, a labelled item in the phone "⋯" menu
+  // Theme toggle: an icon button on desktop, a switch on phones (its knob shows a sun in light mode, a moon in dark)
   const themeMeta = $('meta[name="theme-color"]');
   const darkQuery = matchMedia('(prefers-color-scheme: dark)');
   const currentTheme = () => root.dataset.theme || (darkQuery.matches ? 'dark' : 'light');
@@ -582,11 +618,12 @@
       b.innerHTML = icon(dark ? 'sun' : 'moon');
       b.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
     });
-    $$('[data-theme-toggle="menu"]').forEach((b) => {
-      $('.reach-circle', b).innerHTML = icon(dark ? 'sun' : 'moon');
-      $('.reach-label', b).textContent = dark ? 'Light mode' : 'Dark mode';
+    $$('[data-theme-toggle="switch"]').forEach((b) => {
+      b.setAttribute('aria-checked', String(dark));
+      $('.theme-switch-thumb', b).innerHTML = icon(dark ? 'moon' : 'sun');
     });
-    themeMeta?.setAttribute('content', getComputedStyle(document.body).backgroundColor);
+    // The phone's browser bar matches the wine top bar
+    themeMeta?.setAttribute('content', getComputedStyle(root).getPropertyValue('--hdr').trim() || getComputedStyle(document.body).backgroundColor);
   };
   let themeFadeTimer;
   document.addEventListener('click', (e) => {
@@ -604,7 +641,7 @@
   darkQuery.addEventListener?.('change', syncTheme);
   syncTheme();
 
-  // Dropdowns ("Contact me" and the phone "⋯" menu): a button that toggles a list of links/actions
+  // Dropdowns ("Contact me"): a button that toggles a list of links/actions
   $$('.reach').forEach((wrap) => {
     const toggle = $('.reach-toggle', wrap);
     const setOpen = (open) => {
@@ -639,7 +676,16 @@
   const fillShare = () => {
     const url = pageUrl();
     $('[data-qr-large]', dialog).innerHTML = qrMarkup(url, 2);
-    $('[data-share-url]', dialog).textContent = url || 'Not online yet: publish the site to get its link.';
+    // The link can wrap after a "/" on narrow phones, never in the middle of a word
+    const urlEl = $('[data-share-url]', dialog);
+    urlEl.textContent = url ? '' : 'Not online yet: publish the site to get its link.';
+    if (url) {
+      const parts = url.split('/');
+      parts.forEach((p, i) => {
+        urlEl.append(p);
+        if (i < parts.length - 1) { urlEl.append('/'); if (parts[i + 1]) urlEl.append(document.createElement('wbr')); }
+      });
+    }
     $('[data-copy-link]', dialog).disabled = !url;
     $$('[data-dl-png], [data-dl-svg]', dialog).forEach((b) => { b.disabled = !url || qrStatus !== 'ready'; });
     $('[data-native-share]', dialog).hidden = !(url && navigator.share);
@@ -702,129 +748,220 @@
     if (blob) downloadBlob(blob, `${fileBase}-QR.png`);
   });
 
-  // Highlight the section you're reading in the nav + tab bar
+  // Highlight the section you're reading in the desktop nav: a cream pill glides to the current tab. It holds a
+  // wine copy of the labels, moved the opposite way, so the text under the pill is always wine (styles.css .nav-glide).
   const navLinks = $$('[data-nav]');
-  const atTop = () => scrollY < 8;
-  const setActive = (id) => navLinks.forEach((a) => {
-    const on = a.dataset.nav === id;
-    a.classList.toggle('is-active', on);
-    if (on) a.setAttribute('aria-current', 'true');
-    else a.removeAttribute('aria-current');
-  });
-
-  // Top bar border once scrolled. At the very top, Home is the current section even on tall
-  // screens where the short intro leaves About across the middle of the view.
-  const topbar = $('#topbar');
-
-  // Phones: the row with your name and "⋯" moves up out of view as you scroll down, in step with the
-  // page (like a native app's header), leaving just the section tabs pinned at the top. Scrolling up
-  // pulls it back the same way. If a scroll stops part-way, it glides the rest of the way in or out.
-  const phoneBar = matchMedia('(max-width: 759px)');
-  const topNav = $('.nav', topbar);
-  const brandEl = $('#brand');
-  const moreWrap = $('.more', topbar);
-  const REVEAL_ENOUGH = 20;  // px of scrolling up that commits to bringing the row back
-  let shift = 0;             // how far the bar can move: everything above the tabs, minus a 6px strip
-  let offset = 0;            // how far it has moved (0 = row showing, shift = row hidden)
-  let lastY = scrollY;
-  let lastDir = 0;           // 1 = last scrolled down, -1 = up
-  let settleTimer;
-  const isTucked = () => shift > 0 && offset >= shift - 0.5;
-
-  const paint = () => {
-    topbar.style.transform = offset ? `translate3d(0, ${-offset}px, 0)` : '';
-    // The name and ⋯ fade a little ahead of the move, so they're gone before they reach the edge
-    const fade = shift ? Math.max(0, 1 - offset / (shift * 0.75)) : 1;
-    for (const el of [brandEl, moreWrap]) if (el) el.style.opacity = fade < 1 ? fade.toFixed(3) : '';
-    topbar.classList.toggle('is-tucked', isTucked());
+  const navEl = navLinks[0]?.parentElement;
+  const glide = document.createElement('span');
+  const glideLabels = document.createElement('span');
+  glide.className = 'nav-glide'; glide.setAttribute('aria-hidden', 'true');
+  glideLabels.className = 'nav-glide-labels';
+  navLinks.forEach((a) => { const s = document.createElement('span'); s.textContent = a.textContent; glideLabels.append(s); });
+  glide.append(glideLabels);
+  let pillTab = null;
+  const placeGlide = (animate = true) => {
+    if (!navEl || !pillTab) return;
+    if (!animate) navEl.classList.add('no-glide-anim');
+    navLinks.forEach((a, i) => Object.assign(glideLabels.children[i].style, {
+      left: `${a.offsetLeft}px`, top: `${a.offsetTop}px`, width: `${a.offsetWidth}px`, height: `${a.offsetHeight}px`,
+    }));
+    const { offsetLeft: x, offsetTop: y, offsetWidth: w, offsetHeight: h } = pillTab;
+    Object.assign(glide.style, { transform: `translate(${x}px, ${y}px)`, width: `${w}px`, height: `${h}px` });
+    glideLabels.style.transform = `translate(${-x}px, ${-y}px)`;
+    if (!animate) { void glide.offsetWidth; navEl.classList.remove('no-glide-anim'); }
   };
-  // The ⋯ menu lives in the row, so it closes whenever the row starts to leave
-  const closeMore = () => { if (moreWrap?.classList.contains('is-open')) $('.more-toggle', moreWrap).click(); };
-  // Ease the rest of the way. Frame by frame from one value, so the slide and the fade always agree,
-  // and a new scroll can stop it wherever it is without anything jumping.
-  const GLIDE_MS = reducedMotion ? 0 : 300;
-  const easeOut = (t) => 1 - (1 - t) ** 3;
-  let glideFrame = 0;
-  const stopGlide = () => { cancelAnimationFrame(glideFrame); glideFrame = 0; };
-  const glideTo = (target) => {
-    stopGlide();
-    if (target === shift) closeMore();
-    if (target === offset) return;
-    if (!GLIDE_MS) { offset = target; paint(); return; }
-    const from = offset;
+  if (navEl) { navEl.append(glide); navEl.classList.add('has-glide'); }
+  const topbar = $('#topbar');
+  const phoneBar = matchMedia('(max-width: 759px)');
+
+  // Phones: the section "wheel" on the left of the bar shows only the current section. As the page scrolls it glides
+  // sideways to the new section; swiping it moves the page to whichever section it lands on. It's a scroll-snapping
+  // strip of the same section links, one per width, set into the bar (styles.css .wheel).
+  const wheel = $('.wheel', topbar);
+  const wheelLinks = navLinks.map((a) => {
+    const w = document.createElement('a');
+    w.href = a.getAttribute('href'); w.dataset.wheel = a.dataset.nav; w.textContent = a.textContent;
+    return w;
+  });
+  const wheelScroller = document.createElement('div');
+  wheelScroller.className = 'wheel-scroller'; wheelScroller.append(...wheelLinks);
+  wheel?.append(wheelScroller);
+  let wheelUser = false;      // true once a sideways swipe (and its momentum) is moving the wheel
+  let wheelPressed = false;   // finger (or mouse button) still down on the wheel
+  let wheelGrabbed = -1;      // the section the wheel showed when the finger went down
+  let wheelFrame = 0;
+  let wheelSettleTimer;
+  const wheelIndex = () => (wheelScroller.clientWidth ? Math.round(wheelScroller.scrollLeft / wheelScroller.clientWidth) : 0);
+  const indexOf = (id) => navLinks.findIndex((a) => a.dataset.nav === id);
+  // Only the current section's link is in the Tab order; the arrow keys move between sections (below)
+  const markWheel = (i) => wheelLinks.forEach((w, k) => {
+    w.tabIndex = k === i ? 0 : -1;
+    if (k === i) w.setAttribute('aria-current', 'true');
+    else w.removeAttribute('aria-current');
+  });
+  // Glide the wheel to section i (snapping is off while it glides, so the ease isn't fought). A new section
+  // arriving mid-glide carries on from the current speed instead of easing in from a stop.
+  const WHEEL_MS = reducedMotion ? 0 : 420;
+  const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+  const easeOutCubic = (t) => 1 - (1 - t) ** 3;
+  const spinWheel = (i, animate = true) => {
+    if (!wheel || i < 0) return;
+    const retarget = wheelFrame !== 0;
+    cancelAnimationFrame(wheelFrame); wheelFrame = 0;
+    markWheel(i);
+    const from = wheelScroller.scrollLeft;
+    const to = i * wheelScroller.clientWidth;
+    if (!animate || !WHEEL_MS || !phoneBar.matches || Math.abs(to - from) < 1) {
+      wheelScroller.classList.remove('is-gliding');
+      wheelScroller.scrollLeft = to;
+      return;
+    }
+    wheelScroller.classList.add('is-gliding');
+    const ease = retarget ? easeOutCubic : easeInOut;
     let start = 0;
     const step = (now) => {
       if (!start) start = now;
-      const t = Math.min(1, (now - start) / GLIDE_MS);
-      offset = from + (target - from) * easeOut(t);
-      paint();
-      glideFrame = t < 1 ? requestAnimationFrame(step) : 0;
+      const t = Math.min(1, (now - start) / WHEEL_MS);
+      wheelScroller.scrollLeft = from + (to - from) * ease(t);
+      if (t < 1) wheelFrame = requestAnimationFrame(step);
+      else { wheelFrame = 0; wheelScroller.classList.remove('is-gliding'); }
     };
-    glideFrame = requestAnimationFrame(step);
-  };
-  // When scrolling stops with the row part-way: finish hiding it, unless you'd scrolled up enough to want it back
-  const settle = () => {
-    if (!shift || offset <= 0 || offset >= shift || scrollY < shift) return;   // near the top it just sits with the page
-    glideTo(lastDir < 0 && shift - offset >= REVEAL_ENOUGH ? 0 : shift);
+    wheelFrame = requestAnimationFrame(step);
   };
 
-  const onScroll = () => {
-    const y = scrollY;
-    const dy = y - lastY;
-    lastY = y;
-    topbar.classList.toggle('is-scrolled', !atTop());
+  const atTop = () => scrollY < 8;
+  let currentId = '';
+  let holdUntil = 0;   // while a jump from the wheel is under way, the scroll spy leaves the highlight alone
+  const holding = () => performance.now() < holdUntil;
+  const inBand = new Set();   // sections crossing the middle of the screen (kept by the scroll spy below)
+  const setActive = (id) => {
+    navLinks.forEach((a) => {
+      const on = a.dataset.nav === id;
+      a.classList.toggle('is-active', on);
+      if (on) a.setAttribute('aria-current', 'true');
+      else a.removeAttribute('aria-current');
+    });
+    const first = !currentId;
+    if (id !== currentId && !wheelUser) spinWheel(indexOf(id), !first);
+    currentId = id;
+    const next = navLinks.find((a) => a.dataset.nav === id) || null;
+    if (next === pillTab) return;
+    pillTab = next;
+    placeGlide(!first);
+  };
+  // Put the highlight on whatever the page is actually showing (after a hold ends)
+  const resync = () => {
     if (atTop()) setActive('home');
-    if (!shift || !dy) return;
-    // Ignore the iPhone "bounce" past the bottom of the page settling back: that isn't scrolling up
-    if (dy < 0 && y - dy > document.documentElement.scrollHeight - innerHeight) return;
-    stopGlide();
-    lastDir = Math.sign(dy);
-    offset = Math.min(shift, Math.max(0, offset + dy), Math.max(0, y));   // never hidden more than the page has scrolled
-    paint();
-    if (dy > 0) closeMore();
-    clearTimeout(settleTimer);
-    settleTimer = setTimeout(settle, 140);
+    else if (inBand.size && !inBand.has(currentId)) setActive([...inBand].pop());
   };
-  // Opening ⋯ while the row is part-way out brings it fully back and cancels a pending tuck
-  $('.more-toggle', moreWrap)?.addEventListener('click', () => {
-    if (!moreWrap.classList.contains('is-open')) return;   // (this click closed it)
-    clearTimeout(settleTimer);
-    glideTo(0);
-  });
-  const remeasure = () => {
-    shift = phoneBar.matches && topNav ? Math.max(0, topNav.offsetTop - 6) : 0;
-    offset = Math.min(offset, shift);
-    paint();
+  // Tab sizes change with the window and once the fonts load: re-place the pill and the wheel without animating.
+  // (iPhones fire resize as their toolbars collapse while scrolling; the width doesn't change, so that's ignored.)
+  let lastWidth = innerWidth;
+  const replace = (e) => {
+    if (e?.type === 'resize' && innerWidth === lastWidth) return;
+    lastWidth = innerWidth;
+    placeGlide(false);
+    if (!wheelUser) spinWheel(indexOf(currentId), false);
   };
-  remeasure();
+  addEventListener('resize', replace);
+  phoneBar.addEventListener?.('change', replace);
+  document.fonts?.ready.then(() => replace());
+
+  // Jump to a section from the wheel: highlight it right away and hold it there while the page scrolls. The hold ends
+  // when the page stops (scrollend) or after 1.6s where scrollend isn't supported, then the highlight re-checks.
+  let holdTimer;
+  const endHold = () => { holdUntil = 0; clearTimeout(holdTimer); resync(); };
+  const jumpTo = (id) => {
+    const target = document.getElementById(id);
+    if (!target) return;
+    setActive(id);
+    holdUntil = performance.now() + 1600;
+    clearTimeout(holdTimer);
+    holdTimer = setTimeout(endHold, 1600);
+    target.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
+  };
+  addEventListener('scrollend', () => { if (holdUntil) endHold(); });
+  if (wheel) {
+    // A swipe: when the wheel comes to rest on a different section than it started on, go there
+    const wheelSettled = () => {
+      if (!wheelUser || wheelPressed) return;
+      wheelUser = false;
+      const i = wheelIndex();
+      const id = wheelLinks[i]?.dataset.wheel;
+      if (id && id !== currentId && i !== wheelGrabbed) jumpTo(id);
+      else spinWheel(indexOf(currentId));   // back to the page's section
+    };
+    const settleSoon = () => { clearTimeout(wheelSettleTimer); wheelSettleTimer = setTimeout(wheelSettled, 160); };
+    // The wheel only counts as swiped once it's moved sideways (a vertical drag that starts on it just scrolls the page)
+    const takeWheel = () => {
+      if (wheelUser) return;
+      wheelUser = true;
+      cancelAnimationFrame(wheelFrame); wheelFrame = 0;
+      wheelScroller.classList.remove('is-gliding');
+    };
+    // Touch: the finger is down from touchstart to touchend (Chrome fires pointercancel as soon as a touch pans,
+    // so pointer events can't tell when the finger lifts)
+    let startX = 0, startY = 0;
+    wheelScroller.addEventListener('touchstart', (e) => {
+      wheelPressed = true; wheelGrabbed = wheelIndex(); clearTimeout(wheelSettleTimer);
+      startX = e.touches[0].clientX; startY = e.touches[0].clientY;
+    }, { passive: true });
+    wheelScroller.addEventListener('touchmove', (e) => {
+      const dx = Math.abs(e.touches[0].clientX - startX), dy = Math.abs(e.touches[0].clientY - startY);
+      if (dx > 6 && dx > dy) takeWheel();
+    }, { passive: true });
+    for (const ev of ['touchend', 'touchcancel']) {
+      wheelScroller.addEventListener(ev, () => { wheelPressed = false; if (wheelUser) settleSoon(); }, { passive: true });
+    }
+    // Trackpads and mice: only a sideways scroll moves the wheel
+    wheelScroller.addEventListener('wheel', (e) => {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+      if (!wheelUser) wheelGrabbed = wheelIndex();
+      takeWheel(); settleSoon();
+    }, { passive: true });
+    wheelScroller.addEventListener('scroll', () => {
+      if (!wheelUser) return;
+      if (wheelPressed) clearTimeout(wheelSettleTimer);
+      else settleSoon();
+    }, { passive: true });
+    wheelScroller.addEventListener('scrollend', () => { if (wheelUser && !wheelPressed) wheelSettled(); });
+    // Tapping the label (or Enter on it) goes to that section; the arrow keys go to the previous/next one
+    wheelScroller.addEventListener('click', (e) => {
+      const w = e.target.closest('a[data-wheel]');
+      if (!w) return;
+      e.preventDefault();
+      jumpTo(w.dataset.wheel);
+    });
+    wheelScroller.addEventListener('keydown', (e) => {
+      const step = { ArrowLeft: -1, ArrowRight: 1 }[e.key];
+      const next = step && wheelLinks[indexOf(currentId) + step];
+      if (!next) return;
+      e.preventDefault();
+      jumpTo(next.dataset.wheel);
+      next.focus({ preventScroll: true });
+    });
+  }
+  // Top bar border once scrolled. At the very top, Home is the current section even on tall
+  // screens where the short intro leaves About across the middle of the view.
+  const onScroll = () => {
+    topbar.classList.toggle('is-scrolled', !atTop());
+    if (atTop() && !holding()) setActive('home');
+  };
   addEventListener('scroll', onScroll, { passive: true });
   onScroll();
-  addEventListener('resize', remeasure);
-  phoneBar.addEventListener?.('change', remeasure);
-  // Keyboard users tabbing to the name or ⋯ get the row back
-  topbar.addEventListener('focusin', (e) => { if (!topNav?.contains(e.target)) glideTo(0); });
-
-  // Jumping to a section (tabs, name, "Back to top"): leave room for the bar as it will be when the
-  // jump ends. Moving down hides the row, so that leaves room for just the tabs; moving up brings the
-  // row back, so that leaves room for the full bar.
-  document.addEventListener('click', (e) => {
-    const link = e.target.closest('a[href^="#"]');
-    const id = link ? link.getAttribute('href').slice(1) : '';
-    const target = id && document.getElementById(id);
-    if (!target) return;
-    if (!phoneBar.matches) { root.style.scrollPaddingTop = ''; return; }
-    const full = topbar.offsetHeight + 12;
-    const slim = full - shift;
-    const top = target.getBoundingClientRect().top;
-    const here = full - offset;   // where a section sits when you're already on it
-    if (Math.abs(top - here) < 3) { e.preventDefault(); return; }   // tapping the tab you're on: stay put
-    const endsTucked = top > here && scrollY + top - slim >= shift;   // (a jump that ends near the top shows the row)
-    root.style.scrollPaddingTop = `${endsTucked ? slim : full}px`;
-  });
-
   if ('IntersectionObserver' in window) {
+    // Sections currently crossing the middle band. A section entering the band becomes current; when the
+    // current one leaves, the one still in the band takes over (on phones the short intro can end inside
+    // the band, so About is already there when Home leaves and never "enters" again).
     const spy = new IntersectionObserver((entries) => {
-      entries.forEach((en) => { if (en.isIntersecting) setActive(en.target.id); });
+      entries.forEach((en) => {
+        if (en.isIntersecting) inBand.add(en.target.id);
+        else inBand.delete(en.target.id);
+        if (en.isIntersecting && !holding()) setActive(en.target.id);
+      });
+      if (holding()) return;
+      const current = navLinks.find((a) => a.classList.contains('is-active'))?.dataset.nav;
+      if (inBand.size && !inBand.has(current)) setActive([...inBand].pop());
       if (atTop()) setActive('home');
     }, { rootMargin: '-45% 0px -50% 0px' });
     ['home', 'about', 'resume', 'contact']
@@ -847,7 +984,33 @@
     addEventListener('beforeprint', () => $$('[data-reveal]').forEach((el) => el.classList.add('is-in')));
   }
 
-  // Printing the page should include every bullet, not just the visible ones
-  addEventListener('beforeprint', () => $$('details.tl-more').forEach((d) => { d.dataset.wasOpen = String(d.open); d.open = true; }));
-  addEventListener('afterprint', () => $$('details.tl-more').forEach((d) => { d.open = d.dataset.wasOpen === 'true'; }));
+  // Folding cards: tapping a summary opens/closes its detail. Closed detail is hidden="until-found": out of the way for
+  // keyboard and screen readers, but Ctrl+F and #:~:text= links can still find it, and then open the card
+  // (beforematch). Browsers without until-found treat it as plain hidden. Print shows every detail (styles.css).
+  const setFold = (btn, open) => {
+    const region = document.getElementById(btn.getAttribute('aria-controls'));
+    const inner = region.firstElementChild;
+    clearTimeout(region._t);
+    if (open) {
+      inner.removeAttribute('hidden');
+      region.removeAttribute('inert');
+      void inner.offsetHeight;   // lay out the closed detail first, so it still fades in
+    } else {
+      region.setAttribute('inert', '');   // inert while it animates shut, then hidden until found
+      region._t = setTimeout(() => { inner.setAttribute('hidden', 'until-found'); region.removeAttribute('inert'); }, reducedMotion ? 0 : 450);
+    }
+    btn.setAttribute('aria-expanded', String(open));
+    btn.closest('.foldable')?.classList.toggle('is-open', open);
+  };
+  document.addEventListener('click', (e) => {
+    // The summary's button, or the card's pills (part of the summary while it's closed)
+    const btn = e.target.closest('.fold-toggle')
+      || e.target.closest('.foldable > .fold-pills')?.parentElement.querySelector(':scope > .fold-head .fold-toggle');
+    if (btn) setFold(btn, btn.getAttribute('aria-expanded') !== 'true');
+  });
+  document.addEventListener('beforematch', (e) => {
+    const region = e.target.closest?.('.fold');
+    const btn = region && document.querySelector(`.fold-toggle[aria-controls="${region.id}"]`);
+    if (btn) setFold(btn, true);
+  }, true);
 })();

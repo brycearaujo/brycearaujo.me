@@ -20,17 +20,18 @@
   --pb-ink: #9A6A32;      /* peanut butter: icons */
   --pb-ink-strong: #8A5B26; /* icons sitting on a peanut-butter circle */
   --tag-bg: #EFDDBF;      /* peanut butter: skill tags */
-  --tag-ink: #5B4636;
+  --tag-ink: #3A281C;     /* coffee on peanut butter: 10.5:1, so pill text reads as fast as body text */
   --accent-soft: #EFDDBF; /* peanut-butter tint: icon circles */
-  --accent-2: #C68E4F;    /* peanut butter: timeline dots, glow (decorative) */
-  --on-accent: #FAF6EB;
-  --nav-on: #F8F2E3;      /* the highlighted section tab (same warm white as the cards) */
-  --on-nav-on: #3A281C;
+  --nav-on: #F8F2E3;      /* the highlighted section tab: a cream pill on the wine top bar */
+  --on-nav-on: #722F37;
+  --hdr: #722F37;         /* top bar: wine red, with cream text and icons */
+  --hdr-2: #5E252C;       /* deeper wine: the phone section wheel and the theme switch's track */
+  --on-hdr: #FAF6EB;
   --ok: #2E9E5B;
   --shadow-sm: 0 1px 2px rgb(42 29 21 / .07);
   --shadow: 0 1px 2px rgb(42 29 21 / .06), 0 16px 36px -16px rgb(42 29 21 / .24);
-  --card-shadow: 0 1px 1px rgb(42 29 21 / .06), 0 30px 60px -24px rgb(42 29 21 / .4);
   --radius: 18px;
+  --glide-ease: cubic-bezier(.3, .75, .2, 1);   /* the section highlight's glide between tabs */
   --display: "Lora", Georgia, "Times New Roman", serif;          /* headers & titles */
   --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;  /* body text */
   --container: 1120px;
@@ -39,62 +40,63 @@
   color-scheme: light;
 }
 
-/* Dark mode: deep espresso background, soft cream text (not pure white), mid-tone roast
-   cards for depth, brighter merlot buttons so they still pop, muted peanut-butter tags/icons */
+/* Dark mode: burgundy and champagne, like a wine label with gold foil. A soft burgundy page and cards, a richer
+   wine top bar, deep cabernet buttons, champagne-gold highlights (bullets, section labels, arrows, the active tab)
+   that match the peanut-butter icons, and warm cream text. Every text pair meets WCAG AA (lowest 5.7:1). */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #1B130E;
-    --bg-2: #22180F;
-    --surface: #35261D;
-    --ink: #EFE6D2;
-    --ink-2: #D1C3A9;
-    --ink-3: #AE9B82;
-    --line: #4A3829;
-    --accent: #E48A96;
-    --accent-strong: #E48A96;
-    --cta: #B23A50;
-    --cta-hover: #C24A5F;
-    --on-cta: #FAF3E3;
-    --pb-ink: #C29D72;
-    --pb-ink-strong: #D1AF85;
-    --tag-bg: #4A3827;
-    --tag-ink: #E9DDC6;
-    --accent-soft: #4A3827;
-    --accent-2: #C29D72;
-    --on-accent: #FAF3E3;
-    --nav-on: #EFE6D2;     /* filled cream pill, dark text: easy to spot on espresso */
-    --on-nav-on: #1B130E;
+    --bg: #45232B;
+    --bg-2: #3B1E25;
+    --surface: #56303A;
+    --ink: #F7EDE0;
+    --ink-2: #E4D2C5;
+    --ink-3: #CEB5A7;
+    --line: #714651;
+    --accent: #DEBD85;
+    --accent-strong: #E7CA97;
+    --cta: #8C3248;
+    --cta-hover: #782A3D;
+    --on-cta: #FBF3E4;
+    --pb-ink: #D8B37D;
+    --pb-ink-strong: #E5C591;
+    --tag-bg: #6C3C48;
+    --tag-ink: #F5E6D1;
+    --accent-soft: #6C3C48;
+    --nav-on: #F3E5C9;
+    --on-nav-on: #672935;
+    --hdr: #672935;
+    --hdr-2: #501F2A;
+    --on-hdr: #F7EDE0;
     --shadow-sm: 0 1px 2px rgb(0 0 0 / .3);
     --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 16px 36px -16px rgb(0 0 0 / .6);
-    --card-shadow: 0 1px 1px rgb(0 0 0 / .3), 0 30px 60px -24px rgb(0 0 0 / .75);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #1B130E;
-  --bg-2: #22180F;
-  --surface: #35261D;
-  --ink: #EFE6D2;
-  --ink-2: #D1C3A9;
-  --ink-3: #AE9B82;
-  --line: #4A3829;
-  --accent: #E48A96;
-  --accent-strong: #E48A96;
-  --cta: #B23A50;
-  --cta-hover: #C24A5F;
-  --on-cta: #FAF3E3;
-  --pb-ink: #C29D72;
-  --pb-ink-strong: #D1AF85;
-  --tag-bg: #4A3827;
-  --tag-ink: #E9DDC6;
-  --accent-soft: #4A3827;
-  --accent-2: #C29D72;
-  --on-accent: #FAF3E3;
-  --nav-on: #EFE6D2;
-  --on-nav-on: #1B130E;
+  --bg: #45232B;
+  --bg-2: #3B1E25;
+  --surface: #56303A;
+  --ink: #F7EDE0;
+  --ink-2: #E4D2C5;
+  --ink-3: #CEB5A7;
+  --line: #714651;
+  --accent: #DEBD85;
+  --accent-strong: #E7CA97;
+  --cta: #8C3248;
+  --cta-hover: #782A3D;
+  --on-cta: #FBF3E4;
+  --pb-ink: #D8B37D;
+  --pb-ink-strong: #E5C591;
+  --tag-bg: #6C3C48;
+  --tag-ink: #F5E6D1;
+  --accent-soft: #6C3C48;
+  --nav-on: #F3E5C9;
+  --on-nav-on: #672935;
+  --hdr: #672935;
+  --hdr-2: #501F2A;
+  --on-hdr: #F7EDE0;
   --shadow-sm: 0 1px 2px rgb(0 0 0 / .3);
   --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 16px 36px -16px rgb(0 0 0 / .6);
-  --card-shadow: 0 1px 1px rgb(0 0 0 / .3), 0 30px 60px -24px rgb(0 0 0 / .75);
   color-scheme: dark;
 }
 
@@ -104,7 +106,7 @@
    Base
    ========================================================================== */
 *, *::before, *::after { box-sizing: border-box; }
-[hidden] { display: none !important; }
+[hidden]:not([hidden="until-found"]) { display: none !important; }
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
@@ -121,7 +123,7 @@ body {
 img { display: block; max-width: 100%; }
 a { color: inherit; }
 button { font: inherit; }
-h1, h2, h3, h4 { text-wrap: balance; }
+h1, h2, h3, h4, h5 { text-wrap: balance; }
 p { text-wrap: pretty; }
 :focus-visible { outline: 2.5px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
 
@@ -146,10 +148,9 @@ p { text-wrap: pretty; }
 
 .eyebrow {
   margin: 0 0 14px;
-  font-size: 12.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  font-size: 14px; font-weight: 700;
   color: var(--ink-3);
 }
-.accent-dot { color: var(--accent); }
 
 .sample-banner {
   padding: 9px var(--gutter);
@@ -189,32 +190,33 @@ p { text-wrap: pretty; }
 }
 .icon-btn:hover { border-color: var(--ink-3); transform: translateY(-1px); }
 
-.chip-btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  min-height: 38px; padding: 0 14px;
-  border: 1px solid var(--line); border-radius: 999px;
-  background: transparent; color: var(--ink);
-  font: 600 14px/1 var(--sans); text-decoration: none; cursor: pointer;
-  transition: background-color .15s ease, transform .15s ease;
-}
-.chip-btn:hover { background: var(--bg-2); }
-.chip-btn:active, .icon-btn:active { transform: scale(.94); }
-.chip-btn .icon { width: 16px; height: 16px; }
+.icon-btn:active { transform: scale(.94); }
 
 /* ==========================================================================
    Top bar: name + section links (+ QR / theme). Stays put while scrolling.
-   Desktop: one row. Phones: name + "⋯" menu on top, the section links below;
-   the top row slides away while scrolling down (see .is-tucked).
+   Desktop: name on the left, the section links with a gliding pill, then QR + theme.
+   Phones: one row: the current section as a swipeable "wheel" on the left, the name centred, the menu on the right.
    ========================================================================== */
 .topbar {
   position: sticky; top: 0; z-index: 50;
-  background: color-mix(in oklab, var(--bg) 84%, transparent);
+  background: color-mix(in oklab, var(--hdr) 95%, transparent);
   -webkit-backdrop-filter: saturate(1.4) blur(14px);
   backdrop-filter: saturate(1.4) blur(14px);
   border-bottom: 1px solid transparent;
   transition: border-color .2s ease;
 }
-.topbar.is-scrolled { border-bottom-color: var(--line); }
+.topbar.is-scrolled { border-bottom-color: color-mix(in oklab, var(--hdr) 70%, #000); }
+.topbar .brand { color: var(--on-hdr); }
+.topbar :focus-visible { outline-color: var(--on-hdr); }   /* the wine focus ring would vanish on the wine bar */
+/* The bar's own controls never count as hidden under the bar (html's scroll-padding-top made the browser scroll the
+   page up about half a screen whenever one was focused) */
+.topbar :is(a, button) { scroll-margin-top: calc(-1 * (var(--topbar-h) + 12px)); }
+/* Icon buttons on the wine bar (QR and theme on desktop, QR on phones): cream on a light wash */
+.topbar .icon-btn {
+  background: color-mix(in oklab, var(--on-hdr) 12%, transparent);
+  border-color: color-mix(in oklab, var(--on-hdr) 26%, transparent); color: var(--on-hdr);
+}
+.topbar .icon-btn:hover { border-color: color-mix(in oklab, var(--on-hdr) 55%, transparent); }
 .topbar-inner { height: var(--topbar-h); display: flex; align-items: center; gap: 16px; }
 
 .brand { display: flex; align-items: center; min-width: 0; text-decoration: none; }
@@ -225,50 +227,96 @@ p { text-wrap: pretty; }
   font: 600 clamp(21px, 2.1vw, 25px)/1.4 var(--display); letter-spacing: -0.02em;
 }
 
-.nav { margin-left: auto; display: flex; gap: 4px; }
-.nav a {
+.nav { position: relative; margin-left: auto; display: flex; gap: 4px; }
+.nav a, .nav-glide-labels span {
   padding: 9px 16px; border-radius: 999px;
-  color: var(--ink-2); font-size: 15px; font-weight: 500; text-decoration: none;
-  transition: background-color .2s ease, color .2s ease, box-shadow .2s ease;
+  font-size: 15px; font-weight: 500; text-decoration: none;
 }
-.nav a:hover { color: var(--ink); background: var(--bg-2); }
-.nav a.is-active { color: var(--on-nav-on); background: var(--nav-on); box-shadow: var(--shadow-sm); }
+.nav a {
+  color: color-mix(in oklab, var(--on-hdr) 84%, transparent);
+  transition: background-color .2s ease, color .2s ease;
+}
+.nav a:hover { color: var(--on-hdr); background: color-mix(in oklab, var(--on-hdr) 12%, transparent); }
+/* Without the gliding pill (before app.js sets it up), the active tab gets its own pill */
+.nav:not(.has-glide) a.is-active { color: var(--on-nav-on); background: var(--nav-on); }
+/* The highlight: a cream pill that glides to the section you're reading. It carries a wine copy of the tab labels,
+   shifted the opposite way, so whatever is under the pill reads wine and the rest cream at every moment of the move. */
+.nav-glide {
+  position: absolute; left: 0; top: 0; z-index: 1; overflow: hidden; pointer-events: none;
+  border-radius: 999px; background: var(--nav-on); box-shadow: var(--shadow-sm);
+  transition: transform .6s var(--glide-ease), width .6s var(--glide-ease), height .6s var(--glide-ease);
+}
+.nav-glide-labels { position: absolute; left: 0; top: 0; transition: transform .6s var(--glide-ease); }
+.nav-glide-labels span {
+  position: absolute; display: grid; place-items: center; box-sizing: border-box; white-space: nowrap;
+  color: var(--on-nav-on);
+}
+.nav.no-glide-anim .nav-glide, .nav.no-glide-anim .nav-glide-labels { transition: none; }
 .topbar-actions { display: flex; gap: 8px; margin-left: 8px; }
-.more { display: none; }
-
-/* Items in the "⋯" menu are buttons that look like the Contact-me links */
-button.reach-item { width: 100%; border: 0; background: transparent; font-family: inherit; text-align: left; cursor: pointer; }
+.wheel, .phone-actions { display: none; }
 
 @media (max-width: 759px) {
-  :root { --topbar-h: 110px; }
+  :root { --topbar-h: 60px; --hdr-ctl: 98px; }
+  /* The wheel and the switch + QR pair are the same width, so the name sits in the true centre */
   .topbar-inner {
-    height: auto; padding: 8px 0 10px;
-    display: grid; grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas: "brand more" "nav nav";
-    align-items: center; gap: 8px 12px;
+    display: grid; grid-template-columns: var(--hdr-ctl) minmax(0, 1fr) var(--hdr-ctl);
+    grid-template-areas: "wheel brand actions"; align-items: center; gap: 10px;
   }
-  .brand { grid-area: brand; }
-  .brand-name { font-size: 23px; }
-  .topbar-actions { display: none; }
-  .more { display: block; grid-area: more; }
-  .more .icon-btn { width: 38px; height: 38px; }
-  /* Section links as a segmented bar; the active one is highlighted */
-  .nav {
-    grid-area: nav; margin: 0;
-    display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 2px;
-    padding: 3px; border-radius: 14px;
-    background: var(--bg-2); border: 1px solid var(--line);
+  .brand { grid-area: brand; justify-self: center; }
+  .brand-name { font-size: clamp(17px, calc(6vw - 2px), 23px); }
+  .topbar-actions, .nav { display: none; }
+  /* The section wheel: only the current section shows, set into the bar like an inset tab (a darker wine, rounded
+     rectangle). It slides sideways to the new section as you scroll, and swiping it takes the page there (app.js). */
+  .wheel {
+    display: block; grid-area: wheel; height: 38px; border-radius: 10px;
+    background: var(--hdr-2);
+    box-shadow: inset 0 2px 4px rgb(0 0 0 / .32), inset 0 -1px 0 color-mix(in oklab, var(--on-hdr) 10%, transparent);
   }
-  .nav a { padding: 7px 4px; border-radius: 11px; text-align: center; font-size: 14px; font-weight: 600; }
-  /* Scrolling: app.js moves the bar up in step with the page (inline transform) so only the section
-     tabs stay in view, fading the name + "⋯" as they go, and eases it the rest of the way if a scroll
-     stops part-way. Its own compositor layer keeps the blurred bar from stuttering. */
-  .topbar { will-change: transform; }
-  .topbar.is-tucked .brand, .topbar.is-tucked .more { pointer-events: none; }
-  .topbar.is-tucked .more .reach-menu { visibility: hidden; pointer-events: none; }   /* never an invisible menu over the tabs */
-}
-
-/* ==========================================================================
+  .wheel:has(a:focus-visible) { outline: 2.5px solid var(--on-hdr); outline-offset: 2px; }
+  .wheel-scroller {
+    display: flex; height: 100%; border-radius: inherit;
+    overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none;
+    /* labels fade in and out at the edges as they slide past */
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 10px, #000 calc(100% - 10px), transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 10px, #000 calc(100% - 10px), transparent);
+  }
+  .wheel-scroller::-webkit-scrollbar { display: none; }
+  .wheel-scroller.is-gliding { scroll-snap-type: none; }   /* while app.js glides it to a section */
+  .wheel a {
+    flex: 0 0 100%; scroll-snap-align: center; scroll-snap-stop: always;
+    display: grid; place-items: center; outline: none;
+    color: var(--on-hdr); font-size: 16px; font-weight: 600; text-decoration: none; white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* Right: the light/dark switch, then the QR button */
+  .phone-actions { display: flex; grid-area: actions; justify-self: end; align-items: center; gap: 8px; }
+  .phone-actions .icon-btn { width: 38px; height: 38px; }
+  .theme-switch {
+    position: relative; flex: none; width: 52px; height: 30px; padding: 0; border-radius: 999px; cursor: pointer;
+    background: var(--hdr-2); border: 1px solid color-mix(in oklab, var(--on-hdr) 22%, transparent);
+    box-shadow: inset 0 1px 3px rgb(0 0 0 / .3);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .theme-switch-thumb {
+    position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--nav-on); color: var(--on-nav-on); box-shadow: 0 1px 3px rgb(0 0 0 / .3);
+    transition: translate .35s var(--glide-ease);
+  }
+  .theme-switch-thumb .icon { width: 14px; height: 14px; stroke-width: 2.2; }
+  .theme-switch[aria-checked="true"] .theme-switch-thumb { translate: 22px 0; }
+  /* Narrow phones: a slightly smaller wheel and controls so the name still fits between them */
+  @media (max-width: 374px) {
+    :root { --hdr-ctl: 84px; }
+    .topbar-inner { gap: 8px; }
+    .wheel a { font-size: 15px; }
+    .phone-actions { gap: 6px; }
+    .phone-actions .icon-btn { width: 34px; height: 34px; }
+    .theme-switch { width: 44px; height: 28px; }
+    .theme-switch-thumb { width: 20px; height: 20px; }
+    .theme-switch[aria-checked="true"] .theme-switch-thumb { translate: 16px 0; }
+  }
+}/* ==========================================================================
    Hero
    ========================================================================== */
 .hero { padding: clamp(28px, 6vw, 72px) 0 clamp(48px, 7vw, 88px); }
@@ -318,7 +366,7 @@ button.reach-item { width: 100%; border: 0; background: transparent; font-family
   .hero-actions .btn { min-height: 52px; font-size: 15px; }
 }
 
-/* ---------- "Contact me" (and phone "⋯") dropdowns ----------
+/* ---------- "Contact me" dropdown ----------
    Opening: the panel rolls down, each icon circle drops in (staggered by --i),
    then its label slides out to the side. Closing reverses it quickly. */
 .reach { position: relative; }
@@ -371,8 +419,6 @@ button.reach-item { width: 100%; border: 0; background: transparent; font-family
   transition-delay: calc(110ms + var(--i) * 32ms);
 }
 
-.socials { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; padding: 0; list-style: none; }
-.socials .icon-btn { width: 46px; height: 46px; }
 
 /* ---------- 30-second version ---------- */
 .facts { margin-top: clamp(44px, 7vw, 72px); }
@@ -394,14 +440,6 @@ button.reach-item { width: 100%; border: 0; background: transparent; font-family
 .section { padding: clamp(64px, 10vw, 120px) 0; border-top: 1px solid var(--line); }
 .section--alt { background: var(--bg-2); }
 .section-head { max-width: 760px; margin-bottom: clamp(32px, 5vw, 56px); }
-.section-num {
-  display: flex; align-items: center; gap: 12px;
-  margin: 0 0 14px;
-  font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
-  color: var(--ink-3);
-}
-.section-num b { color: var(--accent-strong); font-variant-numeric: tabular-nums; }
-.section-num i { width: 28px; height: 1px; background: currentColor; opacity: .5; }
 .section h2 {
   margin: 0;
   font: 700 clamp(38px, 6.5vw, 62px)/1.05 var(--display); letter-spacing: -0.015em;
@@ -420,12 +458,14 @@ button.reach-item { width: 100%; border: 0; background: transparent; font-family
 .chapter { display: grid; gap: 8px; padding: 24px 0; border-top: 1px solid var(--line); }
 .chapter:first-child { padding-top: 0; border-top: 0; }
 @media (min-width: 640px) { .chapter { grid-template-columns: 132px minmax(0, 1fr); gap: 24px; } }
+/* Chapter labels: real headings in sentence case (Lora, wine), so they register while scrolling */
 .chapter h3 {
-  margin: 5px 0 0;
-  font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  margin: 2px 0 0;
+  font: 600 20px/1.3 var(--display); letter-spacing: -0.01em;
   color: var(--accent-strong);
 }
-.chapter p { margin: 0 0 12px; font-size: 18px; line-height: 1.65; }
+/* 34em keeps desktop lines near 65 characters; phones are already narrower than this */
+.chapter p { margin: 0 0 12px; max-width: 34em; font-size: 18px; line-height: 1.65; }
 .chapter p:last-child { margin-bottom: 0; }
 
 .about-photo {
@@ -443,8 +483,7 @@ button.reach-item { width: 100%; border: 0; background: transparent; font-family
 }
 .num-label { display: block; margin-top: 10px; font-size: 14.5px; line-height: 1.4; color: var(--ink-2); }
 
-/* "Where I'm headed": same block title + card look as the rest of the résumé section */
-.headed-block { margin-top: clamp(48px, 7vw, 64px); max-width: 880px; }
+/* "Where I'm headed": same block title + card look as the rest of the résumé section (spacing comes from .resume-grid) */
 .headed-card {
   padding: 22px 24px; border-radius: var(--radius);
   background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-sm);
@@ -456,33 +495,6 @@ button.reach-item { width: 100%; border: 0; background: transparent; font-family
 .theme-fade, .theme-fade *, .theme-fade *::before, .theme-fade *::after {
   transition: background-color .35s ease, color .35s ease, border-color .35s ease, box-shadow .35s ease, fill .35s ease, stroke .35s ease !important;
   transition-delay: 0s !important;
-}
-
-.headed {
-  position: relative; overflow: hidden;
-  margin-top: clamp(56px, 8vw, 88px);
-  padding: clamp(28px, 5vw, 56px);
-  border-radius: 28px;
-  background: var(--ink); color: var(--bg);
-}
-.headed::after {
-  content: ""; position: absolute; pointer-events: none;
-  width: 340px; height: 340px; right: -120px; bottom: -160px; border-radius: 50%;
-  background: var(--accent); opacity: .9;
-}
-.headed > * { position: relative; z-index: 1; }
-.headed .eyebrow { color: color-mix(in oklab, var(--bg) 62%, transparent); }
-h3.eyebrow { font-family: inherit; line-height: 1.6; }
-.headed-text {
-  margin: 0; max-width: 34ch;
-  font: italic 400 clamp(24px, 3.6vw, 38px)/1.25 var(--display); letter-spacing: -0.01em;
-}
-.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 28px 0 0; padding: 0; list-style: none; }
-.headed .chips li {
-  padding: 8px 15px; border-radius: 999px;
-  border: 1px solid color-mix(in oklab, var(--bg) 28%, transparent);
-  background: color-mix(in oklab, var(--ink) 70%, transparent);
-  font-size: 14.5px; font-weight: 600;
 }
 
 .hobby-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 156px), 1fr)); gap: 12px; }
@@ -500,49 +512,49 @@ h3.eyebrow { font-family: inherit; line-height: 1.6; }
 /* ---------- Résumé ---------- */
 .resume-head { display: grid; gap: 28px; max-width: none; }
 @media (min-width: 960px) { .resume-head { grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 48px; } }
-.download-card {
-  padding: 20px; border-radius: var(--radius);
-  background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-sm);
-}
 .resume-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
 @media (min-width: 960px) { .resume-cta { align-items: flex-end; text-align: right; } }
-.resume-cta .download-meta { margin: 0; }
-.download-title { margin: 0 0 4px; font-weight: 600; }
-.download-sub { margin: 0 0 14px; font-size: 14.5px; color: var(--ink-2); }
-.download-btns { display: flex; flex-wrap: wrap; gap: 8px; }
-.download-meta { margin: 12px 0 0; font-size: 13px; color: var(--ink-3); }
 .download-missing { margin: 0; font-size: 14.5px; color: var(--ink-2); }
 
-.resume-grid { display: grid; gap: 56px; }
-@media (min-width: 960px) { .resume-grid { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 56px; align-items: start; } }
+/* Phones and tablets: one column in the order Experience, Education, Skills, Volunteer, "Where I'm headed" (so
+   Education comes sooner). The two column wrappers dissolve (display: contents) so `order` can interleave them.
+   Desktop: two columns that stack independently (Experience + Volunteer + "Where I'm headed" | Education + Skills),
+   so opening a card never opens a gap in the other column. */
+.resume-grid { display: grid; gap: 52px; grid-template-columns: minmax(0, 1fr); }
+.resume-col { display: contents; }
+.rg-work { order: 1; } .rg-edu { order: 2; } .rg-skills { order: 3; } .rg-later { order: 4; } .rg-headed { order: 5; }
+@media (min-width: 960px) {
+  .resume-grid { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 52px 56px; align-items: start; }
+  .resume-col { display: flex; flex-direction: column; gap: 52px; order: 0; }
+}
+/* One column (tablets): a 660px cap keeps lines near 70 characters and gives every card one right edge */
+@media (max-width: 959px) { .resume-grid { max-width: 660px; } }
+/* Group headings (Experience, Education, Skills…): Lora, sentence case, clearly above the card titles */
 .block-title {
   display: flex; align-items: center; gap: 10px;
-  margin: 0 0 20px;
-  font: 700 13.5px/1 var(--sans); letter-spacing: .1em; text-transform: uppercase;
-  color: var(--ink-2);
+  margin: 0 0 18px;
+  font: 600 24px/1.2 var(--display); letter-spacing: -0.01em;
+  color: var(--ink);
 }
 .block-title:not(:first-child) { margin-top: 52px; }
-.block-title .icon { width: 18px; height: 18px; color: var(--pb-ink); }
+.block-title .icon { width: 20px; height: 20px; color: var(--pb-ink); }
 
-.timeline { position: relative; margin: 0; padding: 0; list-style: none; }
-.tl-item { position: relative; padding: 0 0 16px 30px; }
-.tl-item::before {
-  content: ""; position: absolute; left: 5px; top: 30px; bottom: -26px;
-  width: 2px; background: var(--line);
-}
-.tl-item:last-child::before { display: none; }
-.tl-dot {
-  position: absolute; left: 0; top: 24px;
-  width: 12px; height: 12px; border-radius: 50%;
-  background: var(--bg-2); border: 2.5px solid var(--accent-2);
-}
+/* Roles and volunteering: a plain list of cards (no timeline rail) */
+.timeline { margin: 0; padding: 0; list-style: none; }
+.tl-item { padding: 0 0 16px; }
+/* The last card's bottom padding would stack on the gap before the next group heading */
+.timeline > .tl-item:last-child { padding-bottom: 0; }
 .tl-card {
   padding: 20px 22px; border-radius: var(--radius);
   background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-sm);
 }
 .tl-meta { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; }
+/* When a summary is too narrow for the longest title + dates on one line (~490px), every summary puts its dates
+   under the title, so the collapsed list doesn't mix one- and two-line rows. Raise 500px if a longer title is added. */
+.fold-head { container-type: inline-size; }
+@container (max-width: 500px) { .fold-head .tl-meta { flex-direction: column; align-items: flex-start; } }
 .tl-title { margin: 0; font: 600 20px/1.25 var(--display); letter-spacing: -0.01em; }
-.tl-dates { font-size: 13.5px; font-weight: 600; color: var(--ink-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tl-dates { font-size: 14px; font-weight: 600; color: var(--ink-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .tl-org { margin: 4px 0 0; font-size: 15.5px; color: var(--ink-2); }
 /* Several roles at one employer: one card, employer on top, roles divided by thin lines */
 .tl-employer {
@@ -552,28 +564,63 @@ h3.eyebrow { font-family: inherit; line-height: 1.6; }
 .tl-employer-name { margin: 0; font: 700 21px/1.25 var(--display); letter-spacing: -0.01em; }
 .tl-employer-loc { font-size: 14px; color: var(--ink-2); }
 .tl-role { padding-top: 16px; }
-.tl-role + .tl-role { margin-top: 18px; border-top: 1px dashed var(--line); }
+.tl-role + .tl-role { margin-top: 20px; border-top: 1px solid var(--line); }
 .tl-group .tl-title { font-size: 18px; }
-.tl-bullets { display: grid; gap: 7px; margin: 14px 0 0; padding-left: 18px; font-size: 15.5px; line-height: 1.55; }
+/* About half a line between bullets, so each bold lead-in starts its own visible chunk */
+.tl-bullets { display: grid; gap: 12px; margin: 14px 0 0; padding-left: 18px; font-size: 15.5px; line-height: 1.55; }
 .tl-bullets li::marker { color: var(--accent); }
 .tl-bullets .lead-in { font-weight: 700; color: var(--ink); }
-.tl-more > .tl-bullets { margin-top: 7px; }
-.tl-more summary {
-  display: inline-flex; align-items: center; gap: 6px;
-  margin-top: 12px; padding: 5px 12px; border-radius: 999px;
-  border: 1px solid var(--line);
-  font-size: 13.5px; font-weight: 600; color: var(--ink-2);
-  cursor: pointer; list-style: none;
+/* ---------- Folding cards: the summary (title, dates, where, pills) shows; tap it to open the detail ----------
+   The heading's button is stretched over the whole summary (::after), so the full summary is the tap target.
+   The detail animates open by growing its grid row from 0fr to 1fr, then fades and settles into place. The pills
+   (skill tags, education badges) sit under the title while closed; opening slides that copy away (.fold-peek) and
+   the detail shows them again at its bottom. */
+.fold-head { position: relative; margin: -8px; padding: 8px 40px 8px 8px; border-radius: 12px; }
+.fold-toggle {
+  margin: 0; padding: 0; border: 0; background: none;
+  font: inherit; letter-spacing: inherit; color: inherit; text-align: left;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
 }
-.tl-more summary::-webkit-details-marker { display: none; }
-.tl-more summary::after { content: "+"; font-size: 15px; line-height: 1; color: var(--accent-strong); }
-.tl-more[open] summary::after { content: "−"; }
-.tl-more summary:hover { background: var(--bg-2); color: var(--ink); }
-.tl-more[open] > summary { order: 2; }
-.tl-more:not([open]) .tl-more-close, .tl-more[open] .tl-more-open { display: none; }
-.tl-more[open] { display: flex; flex-direction: column; align-items: flex-start; }
-.tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 0; padding: 0; list-style: none; }
-.tags li { padding: 4px 10px; border-radius: 999px; background: var(--tag-bg); color: var(--tag-ink); font-size: 12.5px; font-weight: 600; }
+.fold-toggle::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+/* Tabbing onto a summary scrolls to its button (the title): leave room below for the rest of the summary */
+.fold-toggle { scroll-margin-block: 12px 72px; }
+.edu .fold-toggle { scroll-margin-bottom: 150px; }
+.fold-toggle:focus-visible { outline: none; }
+.fold-toggle:focus-visible::after { outline: 2.5px solid var(--accent); outline-offset: 2px; border-radius: 12px; }
+/* The expand arrow: wine red, no circle */
+.fold-chev {
+  position: absolute; top: 50%; right: 6px; translate: 0 -50%;
+  display: grid; place-items: center; width: 26px; height: 26px;
+  color: var(--accent); pointer-events: none; transition: scale .15s ease;
+}
+.fold-chev .icon { width: 22px; height: 22px; stroke-width: 2.4; transition: transform .4s cubic-bezier(.2, .7, .2, 1); }
+.foldable.is-open > .fold-head .fold-chev .icon { transform: rotate(180deg); }
+.fold-head:active .fold-chev { scale: .9; }
+/* Opening takes .65s (closing a quicker .45s). Like the "Contact me" dropdown, each bullet drops in with the box,
+   one after another (--i), then its text reveals left to right a moment later; closing tucks them away quickly. */
+.fold { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s cubic-bezier(.4, 0, .2, 1); }
+.foldable.is-open > .fold { grid-template-rows: 1fr; transition: grid-template-rows .65s cubic-bezier(.2, .7, .2, 1); }
+.fold-inner { min-height: 0; overflow: hidden; }
+.fold-inner li { opacity: 0; transform: translateY(-14px); transition: transform .16s ease-in, opacity .12s ease-in; }
+.fold-inner .li-text {
+  display: block; opacity: 0; transform: translateX(-12px); clip-path: inset(-2px 100% -2px 0);
+  transition: transform .12s ease-in, opacity .1s ease-in, clip-path .12s ease-in;
+}
+.foldable.is-open > .fold li {
+  opacity: 1; transform: none;
+  transition: transform .5s cubic-bezier(.3, 1.2, .5, 1), opacity .3s ease-out;
+  transition-delay: calc(60ms + var(--i, 0) * 70ms);
+}
+.foldable.is-open > .fold .li-text {
+  opacity: 1; transform: none; clip-path: inset(-2px -8px -2px 0);
+  transition: transform .36s cubic-bezier(.2, .8, .2, 1), opacity .3s ease-out, clip-path .42s cubic-bezier(.2, .8, .2, 1);
+  transition-delay: calc(160ms + var(--i, 0) * 60ms);
+}
+/* The pills sit right after the folded detail, so they ride down with its bottom edge as it opens */
+.foldable > .fold-pills { cursor: pointer; }
+.fold-inner > :last-child { margin-bottom: 4px; }   /* a little more room above the pills once open */
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 0; padding: 0; list-style: none; }
+.tags li { padding: 4px 10px; border-radius: 999px; background: var(--tag-bg); color: var(--tag-ink); font-size: 13px; font-weight: 600; }
 
 .edu {
   padding: 22px; border-radius: var(--radius);
@@ -582,10 +629,10 @@ h3.eyebrow { font-family: inherit; line-height: 1.6; }
 .edu + .edu { margin-top: 12px; }
 .edu-school { margin: 0; font: 600 21px/1.2 var(--display); letter-spacing: -0.01em; }
 .edu-degree { margin: 6px 0 0; font-size: 15.5px; color: var(--ink-2); }
+/* Education badges: the same peanut-butter pills as the skill tags */
 .badges { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 0; padding: 0; list-style: none; }
-.badge { padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line); font-size: 13px; font-weight: 600; }
-.badge--accent { border-color: transparent; background: var(--accent-soft); color: var(--accent-strong); }
-.edu-details { display: grid; gap: 5px; margin: 14px 0 0; padding-left: 18px; font-size: 15px; color: var(--ink-2); }
+.badge { padding: 4px 10px; border-radius: 999px; background: var(--tag-bg); color: var(--tag-ink); font-size: 13px; font-weight: 600; }
+.edu-details { display: grid; gap: 9px; margin: 14px 0 0; padding-left: 18px; font-size: 15px; color: var(--ink-2); }
 /* High school: a smaller, quieter card so college leads */
 .edu.edu--brief { padding: 14px 18px 15px; background: transparent; box-shadow: none; }
 .edu--brief .edu-school { font-size: 17px; }
@@ -600,8 +647,8 @@ h3.eyebrow { font-family: inherit; line-height: 1.6; }
 .skill-group + .skill-group { border-top: 1px solid var(--line); }
 .skill-group h4 {
   margin: 0 0 10px;
-  font-size: 12.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
-  color: var(--ink-3);
+  font-size: 14px; font-weight: 700;
+  color: var(--ink-2);
 }
 .skill-list { display: flex; flex-wrap: wrap; gap: 7px; margin: 0; padding: 0; list-style: none; }
 .skill-list li {
@@ -634,6 +681,11 @@ h3.eyebrow { font-family: inherit; line-height: 1.6; }
   background: var(--accent-soft); color: var(--pb-ink-strong);
 }
 .contact-circle .icon { width: 19px; height: 19px; }
+
+/* ---------- Brand logos (Gmail, Google Maps, LinkedIn, GitHub, Handshake) in the icon circles ----------
+   Solid silhouettes of the real logos in the circle's dark brown; their cut-outs show the light-brown circle */
+.logo-mark { display: block; flex: none; width: 26px; height: 26px; }
+.reach-circle .logo-mark { width: 24px; height: 24px; }
 .contact-text { display: flex; flex-direction: column; min-width: 0; }
 .contact-value { font-size: 15.5px; font-weight: 600; line-height: 1.3; overflow-wrap: anywhere; }
 .contact-label { font-size: 13.5px; line-height: 1.35; color: var(--ink-2); }
@@ -686,11 +738,25 @@ dialog.share.is-open::backdrop { opacity: 1; }
 .share-qr svg { display: block; width: 100%; height: auto; }
 .qr-empty { display: grid; place-items: center; aspect-ratio: 1; padding: 12px; text-align: center; color: #57524A; font-size: 14px; line-height: 1.3; }
 .share-url { margin: 14px 0 0; font-size: 14px; color: var(--ink-2); overflow-wrap: anywhere; }
-.share-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 20px; }
-.share-actions .btn { min-height: 44px; padding: 0 12px; font-size: 14px; }
+.share-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 20px; }
+.share-actions .btn { min-width: 0; min-height: 44px; padding: 0 12px; font-size: 14px; }
 .share-actions:has([data-native-share][hidden]) [data-copy-link] { grid-column: 1 / -1; }
 
 .share-note { margin: 14px 0 0; font-size: 13px; color: var(--ink-3); }
+/* Narrow phones: the heading clears the close button and both button columns fit */
+@media (max-width: 359px) {
+  .share-inner { padding-inline: 16px; }
+  .share h2 { font-size: 22px; }
+  .share-close { top: 10px; right: 10px; }
+  .share-actions .btn { padding: 0 8px; gap: 6px; font-size: 13.5px; }
+}
+/* Short screens: a smaller QR and tighter spacing so the whole dialog fits */
+@media (max-height: 700px) {
+  .share-inner { padding-top: 24px; padding-bottom: 18px; }
+  .share-qr { width: min(200px, 56vw); width: clamp(150px, calc(100dvh - 404px), min(200px, 56vw)); margin-top: 14px; padding: 10px; }
+  .share-actions { margin-top: 14px; }
+  .share-url, .share-note { margin-top: 10px; }
+}
 
 /* ---------- Phones: tighter spacing so the page reads in fewer scrolls ---------- */
 @media (max-width: 759px) {
@@ -699,22 +765,20 @@ dialog.share.is-open::backdrop { opacity: 1; }
   .section h2 { font-size: clamp(30px, 8.6vw, 38px); }
   .section-head { margin-bottom: 24px; }
   .chapter { padding: 18px 0; }
+  .chapter h3 { font-size: 19px; }
   .chapter p { font-size: 16.5px; }
   .resume-head { gap: 16px; }
   .resume-grid { gap: 36px; }
   .block-title { margin-bottom: 14px; }
   .block-title:not(:first-child) { margin-top: 36px; }
-  /* Résumé: no timeline rail, just the cards */
   .tl-item { padding: 0 0 10px; }
-  .tl-item::before, .tl-dot { display: none; }
   .tl-card, .edu { padding: 16px 16px 18px; }
   .skills-card { padding: 4px 16px; }
   .tl-title { font-size: 18px; }
-  .tl-employer-name { font-size: 19px; }
-  .tl-bullets { gap: 6px; font-size: 15px; }
+  /* (The employer name keeps its 21px here too: a clear step above the 18px role titles) */
+  .tl-bullets { gap: 11px; font-size: 15px; }
   .tl-role { padding-top: 14px; }
   .tl-role + .tl-role { margin-top: 16px; }
-  .headed-block { margin-top: 36px; }
   .headed-card { padding: 16px 16px 18px; }
   .headed-card p { font-size: 16px; }
   .contact-cta { margin-top: 22px; }
@@ -748,7 +812,7 @@ dialog.share.is-open::backdrop { opacity: 1; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
-  .reach * { transition-delay: 0s !important; }
+  .reach *, .fold-inner li, .fold-inner .li-text { transition-delay: 0s !important; }
 }
 
 /* ---------- Print: a clean text version of the page ---------- */
@@ -758,19 +822,27 @@ dialog.share.is-open::backdrop { opacity: 1; }
     --bg: #fff; --bg-2: #fff; --surface: #fff;
     --ink: #000; --ink-2: #333; --ink-3: #555; --line: #ccc;
     --accent-soft: transparent;
+    --accent: #722F37; --pb-ink: #9A6A32; --pb-ink-strong: #8A5B26;
+    --tag-bg: #EFDDBF; --tag-ink: #3A281C;
     --accent-strong: color-mix(in oklab, var(--accent) 70%, #000);
     color-scheme: light;
   }
-  .topbar, .tabbar, .sample-banner, .hero-actions, .socials, .download-card, .resume-cta,
-  .contact-cta, .contact-actions, .contact-main .arrow, .footer, .share, .toast, .headed::after { display: none !important; }
+  .topbar, .sample-banner, .hero-actions, .resume-cta,
+  .contact-cta, .contact-actions, .contact-main .arrow, .footer, .share, .toast { display: none !important; }
   body { background: #fff; color: #000; padding: 0; font-size: 11pt; }
   .section { padding: 18pt 0; border: 0; }
-  .section--alt, .headed { background: none; color: #000; }
+  .section--alt { background: none; color: #000; }
   .js-reveal [data-reveal] { opacity: 1 !important; transform: none !important; }
-  .tl-more summary { display: none; }
-  .headed .eyebrow { color: var(--ink-3); }
-  .headed .chips li { background: none; border-color: var(--line); color: #000; }
-  .tl-card, .edu, .contact-row, .skills-card, .num, .hobby, .fact { box-shadow: none; border-color: #ccc; break-inside: avoid; }
+  .fold-chev { display: none; }
+  .fold-head { padding-right: 8px; }
+  .fold { grid-template-rows: 1fr !important; }
+  .fold-inner li, .fold-inner .li-text { opacity: 1 !important; transform: none !important; clip-path: none !important; }
+  .fold-inner[hidden] { display: block !important; content-visibility: visible !important; }
+  .tl-card, .edu, .contact-row, .skills-card, .headed-card, .num, .hobby, .fact { box-shadow: none; border-color: #ccc; break-inside: avoid; }
   .tl-group { break-inside: auto; }
   .tl-role { break-inside: avoid; }
+  .block-title { break-after: avoid; }
+  /* The skills card is taller than most of a page: let it split between skill groups instead of leaving a blank page */
+  .skills-card { break-inside: auto; }
+  .skill-group { break-inside: avoid; }
 }

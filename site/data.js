@@ -54,7 +54,7 @@ window.PROFILE = {
     ],
     "numbers": [],
     "aspirations": {
-      "text": "Each of my roles, from IT support and data analysis to market research, building Maven, and volunteering, has given me a different set of skills and experiences. I’m expected to graduate in May 2027 with a B.S. in Business Technology Administration from UMBC, and I want to keep growing, take on new experiences, and put that broad skill set to work.",
+      "text": "Each of my roles, from IT support and data analysis to market research, developing a full-stack web app, and volunteering, has given me a different set of skills and experiences. I’m expected to graduate in May 2027 with a B.S. in Business Technology Administration from UMBC, and I want to keep growing, take on new experiences, and put that broad skill set to work.",
       "lookingFor": []
     },
     "hobbies": []
@@ -69,7 +69,6 @@ window.PROFILE = {
     "summaryInDocument": false,
     "headlineInDocument": false,
     "interestsInDocument": false,
-    "webBulletLimit": 3,
     "titles": {
       "education": "Education",
       "experience": "Experience",

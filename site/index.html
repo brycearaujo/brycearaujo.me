@@ -15,7 +15,7 @@
 <meta name="twitter:card" content="summary">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Bryce Araujo","jobTitle":"Development \u0026 Product Intern","worksFor":{"@type":"Organization","name":"MagView (Applied Software Inc.)"},"description":"Bryce Araujo: Business Technology Administration student at UMBC and part-time Development \u0026 Product Intern at MagView, co-building Maven, the company’s first AI voice agent.","email":"mailto:brycejaraujo@gmail.com","address":{"@type":"PostalAddress","addressLocality":"Burtonsville, MD"},"affiliation":{"@type":"CollegeOrUniversity","name":"University of Maryland, Baltimore County (UMBC)"},"url":"https://brycearaujo.github.io/brycearaujo.me/","sameAs":["https://www.linkedin.com/in/brycejaraujo","https://github.com/brycearaujo","https://app.joinhandshake.com/profiles/5z76a3"]}</script>
 <!-- /build:meta -->
-<meta name="theme-color" content="#F0EAD6">
+<meta name="theme-color" content="#722F37">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -38,18 +38,17 @@
       <a href="#resume" data-nav="resume">Résumé</a>
       <a href="#contact" data-nav="contact">Contact</a>
     </nav>
+    <!-- Phones: the current section as a swipeable wheel (filled in by app.js) -->
+    <nav class="wheel" aria-label="Sections"></nav>
     <!-- Desktop: QR + theme as icon buttons -->
     <div class="topbar-actions">
       <button class="icon-btn" type="button" data-share aria-label="Share this page or show its QR code"><span data-icon="qr"></span></button>
       <button class="icon-btn" type="button" data-theme-toggle="icon" aria-label="Toggle dark mode"></button>
     </div>
-    <!-- Phones: the same two actions tucked into a "⋯" menu so the section links fit -->
-    <div class="reach more">
-      <button class="icon-btn reach-toggle more-toggle" type="button" aria-expanded="false" aria-controls="more-menu" aria-label="More options"><span data-icon="dots"></span></button>
-      <ul class="reach-menu" id="more-menu" aria-label="More options">
-        <li style="--i:0"><button class="reach-item" type="button" data-share><span class="reach-circle"><span data-icon="qr"></span></span><span class="reach-label">Share / QR code</span></button></li>
-        <li style="--i:1"><button class="reach-item" type="button" data-theme-toggle="menu"><span class="reach-circle"></span><span class="reach-label">Dark mode</span></button></li>
-      </ul>
+    <!-- Phones: a light/dark switch and the QR button on the right -->
+    <div class="phone-actions">
+      <button class="theme-switch" type="button" role="switch" aria-checked="false" aria-label="Dark mode" data-theme-toggle="switch"><span class="theme-switch-thumb"></span></button>
+      <button class="icon-btn" type="button" data-share aria-label="Share this page or show its QR code"><span data-icon="qr"></span></button>
     </div>
   </div>
 </header>
@@ -71,10 +70,10 @@
     <div class="share-qr" data-qr-large></div>
     <p class="share-url" data-share-url></p>
     <div class="share-actions">
-      <button class="btn" type="button" data-copy-link><span data-icon="copy"></span>Copy link</button>
-      <button class="btn" type="button" data-native-share hidden><span data-icon="share"></span>Share…</button>
-      <button class="btn" type="button" data-dl-png><span data-icon="download"></span>QR as PNG</button>
-      <button class="btn" type="button" data-dl-svg><span data-icon="download"></span>QR as SVG</button>
+      <button class="btn btn-primary" type="button" data-copy-link><span data-icon="copy"></span>Copy link</button>
+      <button class="btn btn-primary" type="button" data-native-share hidden><span data-icon="share"></span>Share…</button>
+      <button class="btn btn-primary" type="button" data-dl-png><span data-icon="download"></span>QR as PNG</button>
+      <button class="btn btn-primary" type="button" data-dl-svg><span data-icon="download"></span>QR as SVG</button>
     </div>
     <p class="share-note">For business cards, use the SVG. It stays sharp at any print size.</p>
   </div>
