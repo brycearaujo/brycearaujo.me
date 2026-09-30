@@ -31,28 +31,40 @@ function chooseSide(param) {
   return next;
 }
 
-// An image from the website, saved on the phone as well, so the widget still works offline
+// An image from the website, saved on the phone as well, so the widget still works offline. It's downloaded
+// and stored as the file's own bytes: inside a widget, Scriptable's loadImage() shrinks pictures to 500 px.
 async function siteImage(name) {
   const path = fm.joinPath(dir, name);
   try {
     const req = new Request(IMAGES + name);
     req.timeoutInterval = 15;
-    const img = await req.loadImage();
-    fm.writeImage(path, img);
+    const data = await req.load();
+    const img = req.response && req.response.statusCode === 200 ? Image.fromData(data) : null;
+    if (!img) throw new Error(`${name} didn't download`);
+    fm.write(path, data);
     return img;
   } catch (e) {
-    return fm.fileExists(path) ? fm.readImage(path) : null;
+    return fm.fileExists(path) ? Image.fromData(fm.read(path)) : null;
   }
 }
 
-// Home Screen (made for the medium size): the card
+// Home Screen (made for the medium size): the card. Each side comes in two see-through pieces, each under
+// Scriptable's 500 px and drawn at 3x, placed side by side over the card's colour at one image pixel per
+// screen pixel, so nothing gets resized (resizing is what makes a picture soft).
 async function cardWidget(side) {
   const w = new ListWidget();
   w.url = SITE;   // tapping the widget opens the website
   w.backgroundColor = new Color(COLORS[side]);
-  const img = await siteImage(`card-${side}-wide.png`);
-  if (img) {
-    w.backgroundImage = img;
+  const pieces = [await siteImage(`card-${side}-left.png`), await siteImage(`card-${side}-right.png`)];
+  if (pieces.every(Boolean)) {
+    w.setPadding(0, 0, 0, 0);
+    w.addSpacer();
+    const row = w.addStack();
+    row.spacing = 0;
+    row.addSpacer();
+    for (const piece of pieces) row.addImage(piece).imageSize = new Size(piece.size.width / 3, piece.size.height / 3);
+    row.addSpacer();
+    w.addSpacer();
   } else {
     // The very first run with no internet yet: a plain text version of the card
     const name = w.addText('Bryce Araujo');
@@ -83,8 +95,8 @@ async function lockWidget(family, param) {
     w.addSpacer();
     const row = w.addStack();
     row.addSpacer();
-    // The images are 216 and 144 px: exactly 72 and 48 pt on a 3x iPhone, so iOS shows them pixel for pixel
-    row.addImage(qr).imageSize = round ? new Size(48, 48) : new Size(72, 72);
+    // The images are 216 and 144 px: exactly 72 and 48 pt at 3x, so iOS shows them pixel for pixel
+    row.addImage(qr).imageSize = new Size(qr.size.width / 3, qr.size.height / 3);
     row.addSpacer();
     w.addSpacer();
   } else {
