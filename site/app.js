@@ -632,7 +632,7 @@
     if (!reducedMotion) {
       root.classList.add('theme-fade');
       clearTimeout(themeFadeTimer);
-      themeFadeTimer = setTimeout(() => root.classList.remove('theme-fade'), 450);
+      themeFadeTimer = setTimeout(() => root.classList.remove('theme-fade'), 800);
     }
     root.dataset.theme = currentTheme() === 'dark' ? 'light' : 'dark';
     try { localStorage.setItem('theme', root.dataset.theme); } catch { /* private mode */ }
@@ -776,16 +776,20 @@
 
   // Phones: the section "wheel" on the left of the bar shows only the current section. As the page scrolls it glides
   // sideways to the new section; swiping it moves the page to whichever section it lands on. It's a scroll-snapping
-  // strip of the same section links, one per width, set into the bar (styles.css .wheel).
+  // strip of the section names, one per width, set into the bar (styles.css .wheel). Tapping it drops down all the
+  // sections, like the "Contact me" menu (it's the toggle of that .reach dropdown).
   const wheel = $('.wheel', topbar);
+  const wheelMenu = $('#section-menu');
   const wheelLinks = navLinks.map((a) => {
-    const w = document.createElement('a');
-    w.href = a.getAttribute('href'); w.dataset.wheel = a.dataset.nav; w.textContent = a.textContent;
+    const w = document.createElement('span');
+    w.className = 'wheel-label'; w.dataset.wheel = a.dataset.nav; w.textContent = a.textContent;
     return w;
   });
   const wheelScroller = document.createElement('div');
-  wheelScroller.className = 'wheel-scroller'; wheelScroller.append(...wheelLinks);
+  wheelScroller.className = 'wheel-scroller'; wheelScroller.setAttribute('aria-hidden', 'true'); wheelScroller.append(...wheelLinks);
   wheel?.append(wheelScroller);
+  if (wheelMenu) wheelMenu.innerHTML = navLinks.map((a, i) => `<li style="--i:${i}"><a class="reach-item" href="${a.getAttribute('href')}" data-go="${a.dataset.nav}"><span class="reach-label">${esc(a.textContent)}</span></a></li>`).join('');
+  const wheelItems = wheelMenu ? $$('a[data-go]', wheelMenu) : [];
   let wheelUser = false;      // true once a sideways swipe (and its momentum) is moving the wheel
   let wheelPressed = false;   // finger (or mouse button) still down on the wheel
   let wheelGrabbed = -1;      // the section the wheel showed when the finger went down
@@ -793,12 +797,11 @@
   let wheelSettleTimer;
   const wheelIndex = () => (wheelScroller.clientWidth ? Math.round(wheelScroller.scrollLeft / wheelScroller.clientWidth) : 0);
   const indexOf = (id) => navLinks.findIndex((a) => a.dataset.nav === id);
-  // Only the current section's link is in the Tab order; the arrow keys move between sections (below)
-  const markWheel = (i) => wheelLinks.forEach((w, k) => {
-    w.tabIndex = k === i ? 0 : -1;
-    if (k === i) w.setAttribute('aria-current', 'true');
-    else w.removeAttribute('aria-current');
-  });
+  // The wheel button names the current section; the menu marks it
+  const markWheel = (i) => {
+    if (wheel && wheelLinks[i]) wheel.setAttribute('aria-label', `Sections, current: ${wheelLinks[i].textContent}`);
+    wheelItems.forEach((w, k) => { if (k === i) w.setAttribute('aria-current', 'true'); else w.removeAttribute('aria-current'); });
+  };
   // Glide the wheel to section i (snapping is off while it glides, so the ease isn't fought). A new section
   // arriving mid-glide carries on from the current speed instead of easing in from a stop.
   const WHEEL_MS = reducedMotion ? 0 : 420;
@@ -896,6 +899,7 @@
     const takeWheel = () => {
       if (wheelUser) return;
       wheelUser = true;
+      if (wheel.parentElement.classList.contains('is-open')) wheel.click();   // a swipe closes the section menu
       cancelAnimationFrame(wheelFrame); wheelFrame = 0;
       wheelScroller.classList.remove('is-gliding');
     };
@@ -925,20 +929,21 @@
       else settleSoon();
     }, { passive: true });
     wheelScroller.addEventListener('scrollend', () => { if (wheelUser && !wheelPressed) wheelSettled(); });
-    // Tapping the label (or Enter on it) goes to that section; the arrow keys go to the previous/next one
-    wheelScroller.addEventListener('click', (e) => {
-      const w = e.target.closest('a[data-wheel]');
-      if (!w) return;
+    // Tapping the wheel opens the section menu (the .reach dropdown code handles it); choosing a section goes there.
+    // Keyboard: Enter or Space opens the menu, the arrow keys go to the previous/next section.
+    wheelMenu?.addEventListener('click', (e) => {
+      const item = e.target.closest('a[data-go]');
+      if (!item) return;
       e.preventDefault();
-      jumpTo(w.dataset.wheel);
+      jumpTo(item.dataset.go);
     });
-    wheelScroller.addEventListener('keydown', (e) => {
+    wheel.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); wheel.click(); return; }
       const step = { ArrowLeft: -1, ArrowRight: 1 }[e.key];
       const next = step && wheelLinks[indexOf(currentId) + step];
       if (!next) return;
       e.preventDefault();
       jumpTo(next.dataset.wheel);
-      next.focus({ preventScroll: true });
     });
   }
   // Top bar border once scrolled. At the very top, Home is the current section even on tall

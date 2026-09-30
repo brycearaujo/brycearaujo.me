@@ -38,8 +38,11 @@
       <a href="#resume" data-nav="resume">Résumé</a>
       <a href="#contact" data-nav="contact">Contact</a>
     </nav>
-    <!-- Phones: the current section as a swipeable wheel (filled in by app.js) -->
-    <nav class="wheel" aria-label="Sections"></nav>
+    <!-- Phones: the current section as a wheel you can swipe; tapping it drops down all the sections (filled in by app.js) -->
+    <nav class="reach wheel-menu" aria-label="Sections">
+      <div class="wheel reach-toggle" role="button" tabindex="0" aria-expanded="false" aria-controls="section-menu" aria-label="Sections"></div>
+      <ul class="reach-menu" id="section-menu" aria-label="Sections"></ul>
+    </nav>
     <!-- Desktop: QR + theme as icon buttons -->
     <div class="topbar-actions">
       <button class="icon-btn" type="button" data-share aria-label="Share this page or show its QR code"><span data-icon="qr"></span></button>

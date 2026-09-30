@@ -253,7 +253,7 @@ p { text-wrap: pretty; }
 }
 .nav.no-glide-anim .nav-glide, .nav.no-glide-anim .nav-glide-labels { transition: none; }
 .topbar-actions { display: flex; gap: 8px; margin-left: 8px; }
-.wheel, .phone-actions { display: none; }
+.wheel-menu, .phone-actions { display: none; }
 
 @media (max-width: 759px) {
   :root { --topbar-h: 60px; --hdr-ctl: 98px; }
@@ -265,14 +265,32 @@ p { text-wrap: pretty; }
   .brand { grid-area: brand; justify-self: center; }
   .brand-name { font-size: clamp(17px, calc(6vw - 2px), 23px); }
   .topbar-actions, .nav { display: none; }
-  /* The section wheel: only the current section shows, set into the bar like an inset tab (a darker wine, rounded
-     rectangle). It slides sideways to the new section as you scroll, and swiping it takes the page there (app.js). */
-  .wheel {
-    display: block; grid-area: wheel; height: 38px; border-radius: 10px;
-    background: var(--hdr-2);
-    box-shadow: inset 0 2px 4px rgb(0 0 0 / .32), inset 0 -1px 0 color-mix(in oklab, var(--on-hdr) 10%, transparent);
+  /* The phone header's controls share one flat look: a darker wine than the bar with a thin cream edge */
+  .wheel, .theme-switch, .phone-actions .icon-btn {
+    background: var(--hdr-2); border: 1px solid color-mix(in oklab, var(--on-hdr) 18%, transparent); box-shadow: none;
   }
-  .wheel:has(a:focus-visible) { outline: 2.5px solid var(--on-hdr); outline-offset: 2px; }
+  /* The section wheel: only the current section shows, in a rounded rectangle. It slides sideways to the new section
+     as you scroll, swiping it takes the page there, and tapping it drops down all four sections (app.js). */
+  .wheel-menu { display: block; grid-area: wheel; }
+  .wheel { height: 38px; border-radius: 10px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  /* The section menu opens straight down out of the box, as one piece with it: same width, colour and edge, no gap,
+     the box's bottom corners squaring off while it's open. It lists the other sections (the box shows the current one). */
+  .wheel { transition: border-radius .15s ease, border-color .15s ease; }
+  .wheel-menu.is-open .wheel { border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-bottom-color: transparent; }
+  .wheel-menu .reach-menu {
+    top: 100%; left: 0; right: auto; width: 100%; min-width: 0; padding: 2px 0 6px;
+    background: var(--hdr-2); border: 1px solid color-mix(in oklab, var(--on-hdr) 18%, transparent); border-top: 0;
+    border-radius: 0 0 10px 10px; box-shadow: none;
+    clip-path: inset(0 -1px 100% -1px);
+  }
+  .wheel-menu.reach.is-open .reach-menu { clip-path: inset(0 -1px -1px -1px); }
+  .wheel-menu li + li { margin-top: 0; }
+  .wheel-menu li:has(> .reach-item[aria-current]) { display: none; }
+  .wheel-menu .reach-item {
+    justify-content: center; padding: 10px 4px; border-radius: 0;
+    color: color-mix(in oklab, var(--on-hdr) 88%, transparent); font-size: 16px;
+  }
+  .wheel-menu .reach-item:hover, .wheel-menu .reach-item:focus-visible { background: color-mix(in oklab, var(--on-hdr) 10%, transparent); color: var(--on-hdr); }
   .wheel-scroller {
     display: flex; height: 100%; border-radius: inherit;
     overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none;
@@ -282,26 +300,23 @@ p { text-wrap: pretty; }
   }
   .wheel-scroller::-webkit-scrollbar { display: none; }
   .wheel-scroller.is-gliding { scroll-snap-type: none; }   /* while app.js glides it to a section */
-  .wheel a {
+  .wheel-label {
     flex: 0 0 100%; scroll-snap-align: center; scroll-snap-stop: always;
-    display: grid; place-items: center; outline: none;
-    color: var(--on-hdr); font-size: 16px; font-weight: 600; text-decoration: none; white-space: nowrap;
-    -webkit-tap-highlight-color: transparent;
+    display: grid; place-items: center;
+    color: var(--on-hdr); font-size: 16px; font-weight: 600; white-space: nowrap;
   }
   /* Right: the light/dark switch, then the QR button */
   .phone-actions { display: flex; grid-area: actions; justify-self: end; align-items: center; gap: 8px; }
   .phone-actions .icon-btn { width: 38px; height: 38px; }
   .theme-switch {
     position: relative; flex: none; width: 52px; height: 30px; padding: 0; border-radius: 999px; cursor: pointer;
-    background: var(--hdr-2); border: 1px solid color-mix(in oklab, var(--on-hdr) 22%, transparent);
-    box-shadow: inset 0 1px 3px rgb(0 0 0 / .3);
     -webkit-tap-highlight-color: transparent;
   }
   .theme-switch-thumb {
     position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%;
     display: grid; place-items: center;
-    background: var(--nav-on); color: var(--on-nav-on); box-shadow: 0 1px 3px rgb(0 0 0 / .3);
-    transition: translate .35s var(--glide-ease);
+    background: var(--nav-on); color: var(--on-nav-on);
+    transition: translate .6s var(--glide-ease);
   }
   .theme-switch-thumb .icon { width: 14px; height: 14px; stroke-width: 2.2; }
   .theme-switch[aria-checked="true"] .theme-switch-thumb { translate: 22px 0; }
@@ -309,14 +324,16 @@ p { text-wrap: pretty; }
   @media (max-width: 374px) {
     :root { --hdr-ctl: 84px; }
     .topbar-inner { gap: 8px; }
-    .wheel a { font-size: 15px; }
+    .wheel-label, .wheel-menu .reach-item { font-size: 15px; }
     .phone-actions { gap: 6px; }
     .phone-actions .icon-btn { width: 34px; height: 34px; }
     .theme-switch { width: 44px; height: 28px; }
     .theme-switch-thumb { width: 20px; height: 20px; }
     .theme-switch[aria-checked="true"] .theme-switch-thumb { translate: 16px 0; }
   }
-}/* ==========================================================================
+}
+
+/* ==========================================================================
    Hero
    ========================================================================== */
 .hero { padding: clamp(28px, 6vw, 72px) 0 clamp(48px, 7vw, 88px); }
@@ -492,9 +509,15 @@ p { text-wrap: pretty; }
 .headed-card .skill-list { margin-top: 14px; }
 
 /* Theme switch: colors fade instead of snapping (class added briefly by app.js) */
+/* Switching light/dark: every colour eases over .7s together (the switch's knob keeps its own slide) */
 .theme-fade, .theme-fade *, .theme-fade *::before, .theme-fade *::after {
-  transition: background-color .35s ease, color .35s ease, border-color .35s ease, box-shadow .35s ease, fill .35s ease, stroke .35s ease !important;
+  --theme-ease: .7s cubic-bezier(.4, 0, .2, 1);
+  transition: background-color var(--theme-ease), color var(--theme-ease), border-color var(--theme-ease),
+    box-shadow var(--theme-ease), fill var(--theme-ease), stroke var(--theme-ease), outline-color var(--theme-ease) !important;
   transition-delay: 0s !important;
+}
+.theme-fade .theme-switch-thumb {
+  transition: translate .6s var(--glide-ease), background-color var(--theme-ease), color var(--theme-ease) !important;
 }
 
 .hobby-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 156px), 1fr)); gap: 12px; }
