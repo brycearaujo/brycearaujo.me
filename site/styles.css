@@ -1,0 +1,888 @@
+/* ==========================================================================
+   Tokens — light is the default; dark follows the system unless toggled.
+   Palette: eggshell (backgrounds), coffee brown (text / dark mode),
+   wine red (main accent) and peanut butter brown (warm secondary accent).
+   Every text pair meets WCAG AA contrast (4.5:1+); decorative accents are marked.
+   ========================================================================== */
+:root {
+  --bg: #F0EAD6;          /* eggshell */
+  --bg-2: #E7DEC6;        /* deeper eggshell (alternate sections) */
+  --surface: #F8F2E3;     /* warm eggshell-white (cards): lighter than the page, but not bright white */
+  --ink: #3A281C;         /* coffee brown: body text */
+  --ink-2: #5B4636;       /* lighter coffee: secondary text */
+  --ink-3: #6F5A48;       /* milky coffee: small labels */
+  --line: #DDD0B5;
+  --accent: #722F37;      /* wine red: small text accents, focus rings, bullets */
+  --accent-strong: #722F37;
+  --cta: #722F37;         /* wine red buttons (calls to action) */
+  --cta-hover: #5E252C;
+  --on-cta: #FAF6EB;
+  --pb-ink: #9A6A32;      /* peanut butter: icons */
+  --pb-ink-strong: #8A5B26; /* icons sitting on a peanut-butter circle */
+  --tag-bg: #EFDDBF;      /* peanut butter: skill tags */
+  --tag-ink: #3A281C;     /* coffee on peanut butter: 10.5:1, so pill text reads as fast as body text */
+  --accent-soft: #EFDDBF; /* peanut-butter tint: icon circles */
+  --nav-on: #F8F2E3;      /* the highlighted section tab: a cream pill on the wine top bar */
+  --on-nav-on: #722F37;
+  --hdr: #722F37;         /* top bar: wine red, with cream text and icons */
+  --hdr-2: #5E252C;       /* deeper wine: the phone section wheel and the theme switch's track */
+  --on-hdr: #FAF6EB;
+  --ok: #2E9E5B;
+  --shadow-sm: 0 1px 2px rgb(42 29 21 / .07);
+  --shadow: 0 1px 2px rgb(42 29 21 / .06), 0 16px 36px -16px rgb(42 29 21 / .24);
+  --radius: 18px;
+  --glide-ease: cubic-bezier(.3, .75, .2, 1);   /* the section highlight's glide between tabs */
+  --display: "Lora", Georgia, "Times New Roman", serif;          /* headers & titles */
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;  /* body text */
+  --container: 1120px;
+  --gutter: 16px;
+  --topbar-h: 60px;
+  color-scheme: light;
+}
+
+/* Dark mode: burgundy and champagne, like a wine label with gold foil. A soft burgundy page and cards, a richer
+   wine top bar, deep cabernet buttons, champagne-gold highlights (bullets, section labels, arrows, the active tab)
+   that match the peanut-butter icons, and warm cream text. Every text pair meets WCAG AA (lowest 5.7:1). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #45232B;
+    --bg-2: #3B1E25;
+    --surface: #56303A;
+    --ink: #F7EDE0;
+    --ink-2: #E4D2C5;
+    --ink-3: #CEB5A7;
+    --line: #714651;
+    --accent: #DEBD85;
+    --accent-strong: #E7CA97;
+    --cta: #8C3248;
+    --cta-hover: #782A3D;
+    --on-cta: #FBF3E4;
+    --pb-ink: #D8B37D;
+    --pb-ink-strong: #E5C591;
+    --tag-bg: #6C3C48;
+    --tag-ink: #F5E6D1;
+    --accent-soft: #6C3C48;
+    --nav-on: #F3E5C9;
+    --on-nav-on: #672935;
+    --hdr: #672935;
+    --hdr-2: #501F2A;
+    --on-hdr: #F7EDE0;
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / .3);
+    --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 16px 36px -16px rgb(0 0 0 / .6);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #45232B;
+  --bg-2: #3B1E25;
+  --surface: #56303A;
+  --ink: #F7EDE0;
+  --ink-2: #E4D2C5;
+  --ink-3: #CEB5A7;
+  --line: #714651;
+  --accent: #DEBD85;
+  --accent-strong: #E7CA97;
+  --cta: #8C3248;
+  --cta-hover: #782A3D;
+  --on-cta: #FBF3E4;
+  --pb-ink: #D8B37D;
+  --pb-ink-strong: #E5C591;
+  --tag-bg: #6C3C48;
+  --tag-ink: #F5E6D1;
+  --accent-soft: #6C3C48;
+  --nav-on: #F3E5C9;
+  --on-nav-on: #672935;
+  --hdr: #672935;
+  --hdr-2: #501F2A;
+  --on-hdr: #F7EDE0;
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / .3);
+  --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 16px 36px -16px rgb(0 0 0 / .6);
+  color-scheme: dark;
+}
+
+@media (min-width: 760px) { :root { --gutter: 32px; --topbar-h: 68px; } }
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+[hidden]:not([hidden="until-found"]) { display: none !important; }
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--topbar-h) + 12px);
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 17px/1.6 var(--sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+img { display: block; max-width: 100%; }
+a { color: inherit; }
+button { font: inherit; }
+h1, h2, h3, h4, h5 { text-wrap: balance; }
+p { text-wrap: pretty; }
+:focus-visible { outline: 2.5px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+
+.container {
+  width: min(100% - 2 * max(var(--gutter), env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px)), var(--container));
+  margin-inline: auto;
+}
+
+.icon {
+  width: 20px; height: 20px; flex: none;
+  fill: none; stroke: currentColor; stroke-width: 1.8;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+[data-icon] { display: contents; }
+
+.skip-link {
+  position: absolute; left: 12px; top: -60px; z-index: 100;
+  padding: 10px 16px; border-radius: 999px;
+  background: var(--ink); color: var(--bg); font-weight: 600; text-decoration: none;
+}
+.skip-link:focus { top: 12px; }
+
+.eyebrow {
+  margin: 0 0 14px;
+  font-size: 14px; font-weight: 700;
+  color: var(--ink-3);
+}
+
+.sample-banner {
+  padding: 9px var(--gutter);
+  background: repeating-linear-gradient(-45deg, #FFE38A 0 14px, #FFD95E 14px 28px);
+  color: #3B2F00;
+  font-size: 13.5px; font-weight: 600; text-align: center;
+}
+.sample-banner code { font-size: 12.5px; background: rgb(255 255 255 / .55); padding: 1px 6px; border-radius: 5px; }
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; padding: 0 20px;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: var(--surface); color: var(--ink);
+  font: 600 15px/1 var(--sans); text-decoration: none; white-space: nowrap;
+  cursor: pointer;
+  transition: transform .15s ease, background-color .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.btn:hover { border-color: var(--ink-3); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.btn:active { transform: scale(.97); }
+.btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; border-color: var(--line); }
+.btn .icon { width: 18px; height: 18px; }
+.btn-primary { background: var(--cta); border-color: var(--cta); color: var(--on-cta); }
+.btn-primary:hover { background: var(--cta-hover); border-color: var(--cta-hover); }
+.btn-lg { min-height: 56px; padding: 0 26px; font-size: 16px; }
+
+.icon-btn {
+  width: 42px; height: 42px; flex: none;
+  display: grid; place-items: center;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: var(--surface); color: var(--ink);
+  text-decoration: none; cursor: pointer;
+  transition: transform .15s ease, border-color .15s ease;
+}
+.icon-btn:hover { border-color: var(--ink-3); transform: translateY(-1px); }
+
+.icon-btn:active { transform: scale(.94); }
+
+/* ==========================================================================
+   Top bar: name + section links (+ QR / theme). Stays put while scrolling.
+   Desktop: name on the left, the section links with a gliding pill, then QR + theme.
+   Phones: one row: the current section as a swipeable "wheel" on the left, the name centred, the menu on the right.
+   ========================================================================== */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: color-mix(in oklab, var(--hdr) 95%, transparent);
+  -webkit-backdrop-filter: saturate(1.4) blur(14px);
+  backdrop-filter: saturate(1.4) blur(14px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s ease;
+}
+.topbar.is-scrolled { border-bottom-color: color-mix(in oklab, var(--hdr) 70%, #000); }
+.topbar .brand { color: var(--on-hdr); }
+.topbar :focus-visible { outline-color: var(--on-hdr); }   /* the wine focus ring would vanish on the wine bar */
+/* The bar's own controls never count as hidden under the bar (html's scroll-padding-top made the browser scroll the
+   page up about half a screen whenever one was focused) */
+.topbar :is(a, button, [tabindex]) { scroll-margin-top: calc(-1 * (var(--topbar-h) + 12px)); }
+/* Icon buttons on the wine bar (QR and theme on desktop, QR on phones): cream on a light wash */
+.topbar .icon-btn {
+  background: color-mix(in oklab, var(--on-hdr) 12%, transparent);
+  border-color: color-mix(in oklab, var(--on-hdr) 26%, transparent); color: var(--on-hdr);
+}
+.topbar .icon-btn:hover { border-color: color-mix(in oklab, var(--on-hdr) 55%, transparent); }
+.topbar-inner { height: var(--topbar-h); display: flex; align-items: center; gap: 16px; }
+
+.brand { display: flex; align-items: center; min-width: 0; text-decoration: none; }
+/* Line height leaves room for Lora's descenders (the y and j): with a tighter one, overflow: hidden
+   (needed for the "…" on very narrow screens) clips their tails */
+.brand-name {
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  font: 600 clamp(21px, 2.1vw, 25px)/1.4 var(--display); letter-spacing: -0.02em;
+}
+
+.nav { position: relative; margin-left: auto; display: flex; gap: 4px; }
+.nav a, .nav-glide-labels span {
+  padding: 9px 16px; border-radius: 999px;
+  font-size: 15px; font-weight: 500; text-decoration: none;
+}
+.nav a {
+  color: color-mix(in oklab, var(--on-hdr) 84%, transparent);
+  transition: background-color .2s ease, color .2s ease;
+}
+.nav a:hover { color: var(--on-hdr); background: color-mix(in oklab, var(--on-hdr) 12%, transparent); }
+/* Without the gliding pill (before app.js sets it up), the active tab gets its own pill */
+.nav:not(.has-glide) a.is-active { color: var(--on-nav-on); background: var(--nav-on); }
+/* The highlight: a cream pill that glides to the section you're reading. It carries a wine copy of the tab labels,
+   shifted the opposite way, so whatever is under the pill reads wine and the rest cream at every moment of the move. */
+.nav-glide {
+  position: absolute; left: 0; top: 0; z-index: 1; overflow: hidden; pointer-events: none;
+  border-radius: 999px; background: var(--nav-on); box-shadow: var(--shadow-sm);
+  transition: transform .6s var(--glide-ease), width .6s var(--glide-ease), height .6s var(--glide-ease);
+}
+.nav-glide-labels { position: absolute; left: 0; top: 0; transition: transform .6s var(--glide-ease); }
+.nav-glide-labels span {
+  position: absolute; display: grid; place-items: center; box-sizing: border-box; white-space: nowrap;
+  color: var(--on-nav-on);
+}
+.nav.no-glide-anim .nav-glide, .nav.no-glide-anim .nav-glide-labels { transition: none; }
+.topbar-actions { display: flex; gap: 8px; margin-left: 8px; }
+.wheel-menu, .phone-actions { display: none; }
+
+@media (max-width: 759px) {
+  :root { --topbar-h: 60px; --hdr-ctl: 98px; }
+  /* The wheel and the switch + QR pair are the same width, so the name sits in the true centre */
+  .topbar-inner {
+    display: grid; grid-template-columns: var(--hdr-ctl) minmax(0, 1fr) var(--hdr-ctl);
+    grid-template-areas: "wheel brand actions"; align-items: center; gap: 10px;
+  }
+  .brand { grid-area: brand; justify-self: center; }
+  .brand-name { font-size: clamp(17px, calc(6vw - 2px), 23px); }
+  .topbar-actions, .nav { display: none; }
+  /* The phone header's controls share one flat look: a darker wine than the bar with a thin cream edge */
+  .wheel, .theme-switch, .phone-actions .icon-btn {
+    background: var(--hdr-2); border: 1px solid color-mix(in oklab, var(--on-hdr) 18%, transparent); box-shadow: none;
+  }
+  /* The section wheel: only the current section shows, in a rounded rectangle. It slides sideways to the new section
+     as you scroll, swiping it takes the page there, and tapping it drops down all four sections (app.js). */
+  .wheel-menu { display: block; grid-area: wheel; }
+  .wheel { height: 38px; border-radius: 10px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  /* The section menu opens straight down out of the box, as one piece with it: same width, colour and edge, no gap,
+     the box's bottom corners squaring off while it's open. It lists the other sections (the box shows the current one). */
+  .wheel { transition: border-radius .15s ease, border-color .15s ease; }
+  .wheel-menu.is-open .wheel { border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-bottom-color: transparent; }
+  .wheel-menu .reach-menu {
+    top: 100%; left: 0; right: auto; width: 100%; min-width: 0; padding: 2px 0 6px;
+    background: var(--hdr-2); border: 1px solid color-mix(in oklab, var(--on-hdr) 18%, transparent); border-top: 0;
+    border-radius: 0 0 10px 10px; box-shadow: none;
+    clip-path: inset(0 -1px 100% -1px);
+  }
+  .wheel-menu.reach.is-open .reach-menu { clip-path: inset(0 -1px -1px -1px); }
+  .wheel-menu li + li { margin-top: 0; }
+  .wheel-menu li:has(> .reach-item[data-here]) { display: none; }   /* fixed when the menu opens, so rows don't reshuffle as it closes */
+  .wheel-menu .reach-item:focus-visible { outline-offset: -4px; border-radius: 8px; }
+  .wheel-menu .reach-item {
+    justify-content: center; padding: 10px 4px; border-radius: 0;
+    color: color-mix(in oklab, var(--on-hdr) 88%, transparent); font-size: 16px;
+  }
+  .wheel-menu .reach-item:hover, .wheel-menu .reach-item:focus-visible { background: color-mix(in oklab, var(--on-hdr) 10%, transparent); color: var(--on-hdr); }
+  .wheel-scroller {
+    display: flex; height: 100%; border-radius: inherit;
+    overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none;
+    /* labels fade in and out at the edges as they slide past */
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 10px, #000 calc(100% - 10px), transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 10px, #000 calc(100% - 10px), transparent);
+  }
+  .wheel-scroller::-webkit-scrollbar { display: none; }
+  .wheel-scroller.is-gliding { scroll-snap-type: none; }   /* while app.js glides it to a section */
+  .wheel-label {
+    flex: 0 0 100%; scroll-snap-align: center; scroll-snap-stop: always;
+    display: grid; place-items: center;
+    color: var(--on-hdr); font-size: 16px; font-weight: 600; white-space: nowrap;
+  }
+  /* Right: the light/dark switch, then the QR button */
+  .phone-actions { display: flex; grid-area: actions; justify-self: end; align-items: center; gap: 8px; }
+  .phone-actions .icon-btn { width: 38px; height: 38px; }
+  .theme-switch {
+    position: relative; flex: none; width: 52px; height: 30px; padding: 0; border-radius: 999px; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .theme-switch-thumb {
+    position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--nav-on); color: var(--on-nav-on);
+    transition: translate .6s var(--glide-ease);
+  }
+  .theme-switch-thumb .icon { width: 14px; height: 14px; stroke-width: 2.2; }
+  .theme-switch[aria-checked="true"] .theme-switch-thumb { translate: 22px 0; }
+  /* Narrow phones: a slightly smaller wheel and controls so the name still fits between them */
+  @media (max-width: 374px) {
+    :root { --hdr-ctl: 84px; }
+    .topbar-inner { gap: 8px; }
+    .wheel-label, .wheel-menu .reach-item { font-size: 15px; }
+    .phone-actions { gap: 6px; }
+    .phone-actions .icon-btn { width: 34px; height: 34px; }
+    .theme-switch { width: 44px; height: 28px; }
+    .theme-switch-thumb { width: 20px; height: 20px; }
+    .theme-switch[aria-checked="true"] .theme-switch-thumb { translate: 16px 0; }
+  }
+}
+
+/* ==========================================================================
+   Hero
+   ========================================================================== */
+.hero { padding: clamp(28px, 6vw, 72px) 0 clamp(48px, 7vw, 88px); }
+/* Desktop: a compact opening, so the About section starts close below the buttons */
+@media (min-width: 960px) {
+  .hero { padding: 64px 0 76px; }
+}
+
+.status {
+  display: inline-flex; align-items: center; gap: 10px;
+  margin: 0 0 24px; padding: 7px 14px 7px 12px;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink-2); font-size: 14px; font-weight: 600;
+}
+.status-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex: none;
+  background: var(--ok);
+  animation: pulse 2.4s ease-out infinite;
+}
+.status.is-closed .status-dot { background: var(--ink-3); animation: none; }
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgb(46 158 91 / .5); }
+  70%, 100% { box-shadow: 0 0 0 10px rgb(46 158 91 / 0); }
+}
+
+.hero-title {
+  margin: 0;
+  font-family: var(--display); font-weight: 700;
+  font-size: clamp(50px, 11vw, 100px); line-height: .98; letter-spacing: -0.02em;
+}
+.hero-headline { margin: 20px 0 0; font-size: clamp(18px, 2.2vw, 21px); font-weight: 600; }
+.hero-tagline { margin: 22px 0 0; max-width: 48ch; font-size: clamp(17px, 2vw, 19px); line-height: 1.65; color: var(--ink-2); }
+
+/* Three equal buttons in a row (stacked full-width on phones) */
+.hero-actions {
+  position: relative; z-index: 5;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px;
+  max-width: 600px; margin-top: 30px;
+}
+.hero-actions .btn {
+  width: 100%; padding-inline: 10px; gap: 7px;
+  font-size: 14.5px; line-height: 1.15; white-space: normal; text-align: center; text-wrap: balance;
+}
+@media (max-width: 559px) {
+  .hero-actions { grid-template-columns: minmax(0, 1fr); }
+  .hero-actions .btn { min-height: 52px; font-size: 15px; }
+}
+
+/* ---------- "Contact me" dropdown ----------
+   Opening: the panel rolls down, each icon circle drops in (staggered by --i),
+   then its label slides out to the side. Closing reverses it quickly. */
+.reach { position: relative; }
+.reach-toggle .chev { width: 16px; height: 16px; margin-left: -1px; transition: transform .25s cubic-bezier(.2, .8, .2, 1); }
+.reach.is-open .reach-toggle .chev { transform: rotate(180deg); }
+.reach-menu {
+  position: absolute; z-index: 20; top: calc(100% + 8px); right: 0;   /* over the buttons below it */
+  min-width: max(100%, 236px); margin: 0; padding: 8px; list-style: none;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 22px;
+  box-shadow: var(--shadow);
+  visibility: hidden; pointer-events: none;
+  clip-path: inset(0 0 100% 0 round 22px);
+  transition: clip-path .2s cubic-bezier(.4, 0, .2, 1), visibility 0s linear .2s;
+}
+.reach.is-open .reach-menu {
+  visibility: visible; pointer-events: auto;
+  clip-path: inset(-24px -24px -44px -24px round 22px);
+  transition: clip-path .26s cubic-bezier(.2, .8, .2, 1), visibility 0s;
+}
+.reach-menu li + li { margin-top: 2px; }
+.reach-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 5px 14px 5px 5px; border-radius: 999px;
+  color: var(--ink); font-size: 15px; font-weight: 600; text-decoration: none;
+  transition: background-color .15s ease;
+}
+.reach-item:hover, .reach-item:focus-visible { background: var(--bg-2); }
+.reach-circle {
+  flex: none; width: 40px; height: 40px;
+  display: grid; place-items: center; border-radius: 50%;
+  background: var(--accent-soft); color: var(--pb-ink-strong);
+  opacity: 0; transform: translateY(-16px) scale(.55);
+  transition: transform .14s ease-in, opacity .12s ease-in;
+}
+.reach-circle .icon { width: 18px; height: 18px; }
+.reach-label {
+  white-space: nowrap;
+  opacity: 0; transform: translateX(-12px);
+  clip-path: inset(0 100% 0 0);
+  transition: transform .12s ease-in, opacity .1s ease-in, clip-path .12s ease-in;
+}
+.reach.is-open .reach-circle {
+  opacity: 1; transform: none;
+  transition: transform .26s cubic-bezier(.3, 1.35, .5, 1), opacity .16s ease-out;
+  transition-delay: calc(var(--i) * 32ms);
+}
+.reach.is-open .reach-label {
+  opacity: 1; transform: none; clip-path: inset(0 -6px 0 0);
+  transition: transform .22s cubic-bezier(.2, .8, .2, 1), opacity .18s ease-out, clip-path .24s cubic-bezier(.2, .8, .2, 1);
+  transition-delay: calc(110ms + var(--i) * 32ms);
+}
+
+
+/* ---------- 30-second version ---------- */
+.facts { margin-top: clamp(44px, 7vw, 72px); }
+.facts-grid {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px;
+  margin: 0; overflow: hidden;
+  background: var(--line); border: 1px solid var(--line); border-radius: var(--radius);
+}
+@media (min-width: 760px) { .facts-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.fact { padding: 18px 20px 20px; background: var(--surface); }
+.fact:last-child:nth-child(odd) { grid-column: 1 / -1; }
+@media (min-width: 760px) { .fact:last-child:nth-child(odd) { grid-column: auto; } }
+.fact dt { font-size: 13px; font-weight: 600; color: var(--ink-3); }
+.fact dd { margin: 6px 0 0; font: 500 clamp(17px, 2vw, 20px)/1.25 var(--display); }
+
+/* ==========================================================================
+   Sections
+   ========================================================================== */
+.section { padding: clamp(64px, 10vw, 120px) 0; border-top: 1px solid var(--line); }
+.section--alt { background: var(--bg-2); }
+.section-head { max-width: 760px; margin-bottom: clamp(32px, 5vw, 56px); }
+.section h2 {
+  margin: 0;
+  font: 700 clamp(38px, 6.5vw, 62px)/1.05 var(--display); letter-spacing: -0.015em;
+}
+.lead { margin: 18px 0 0; max-width: 60ch; font-size: clamp(17px, 2vw, 19px); color: var(--ink-2); }
+
+.subhead { margin: clamp(56px, 8vw, 88px) 0 20px; }
+/* Desktop: tighter spacing between sections, matching the opening's 76 px below the buttons */
+@media (min-width: 960px) {
+  .section { padding: 76px 0; }
+  .section-head { margin-bottom: 40px; }
+  .subhead { margin-top: 64px; }
+}
+
+/* ---------- About ---------- */
+.about-grid { display: grid; gap: 44px; }
+@media (min-width: 960px) {
+  .about-grid { grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 72px; align-items: start; }
+  .about-grid--single { grid-template-columns: minmax(0, 1fr); max-width: 880px; }
+  .about-side { position: sticky; top: calc(var(--topbar-h) + 24px); }
+}
+.chapter { display: grid; gap: 8px; padding: 24px 0; border-top: 1px solid var(--line); }
+.chapter:first-child { padding-top: 0; border-top: 0; }
+@media (min-width: 640px) { .chapter { grid-template-columns: 132px minmax(0, 1fr); gap: 24px; } }
+/* Chapter labels: real headings in sentence case (Lora, wine), so they register while scrolling */
+.chapter h3 {
+  margin: 2px 0 0;
+  font: 600 20px/1.3 var(--display); letter-spacing: -0.01em;
+  color: var(--accent-strong);
+}
+/* 34em keeps desktop lines near 65 characters; phones are already narrower than this */
+.chapter p { margin: 0 0 12px; max-width: 34em; font-size: 18px; line-height: 1.65; }
+.chapter p:last-child { margin-bottom: 0; }
+
+.about-photo {
+  margin: 0 0 16px; overflow: hidden;
+  aspect-ratio: 4 / 5; border-radius: var(--radius);
+  background: var(--bg-2);
+}
+.about-photo img { width: 100%; height: 100%; object-fit: cover; }
+.numbers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.num { padding: 20px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.num-value {
+  display: block;
+  font: 560 clamp(34px, 5vw, 46px)/1 var(--display); letter-spacing: -0.03em;
+  color: var(--accent-strong);
+}
+.num-label { display: block; margin-top: 10px; font-size: 14.5px; line-height: 1.4; color: var(--ink-2); }
+
+/* "Where I'm headed": same block title + card look as the rest of the résumé section (spacing comes from .resume-grid) */
+.headed-card {
+  padding: 22px 24px; border-radius: var(--radius);
+  background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-sm);
+}
+.headed-card p { margin: 0; font-size: 17px; line-height: 1.65; color: var(--ink); }
+.headed-card .skill-list { margin-top: 14px; }
+
+/* Theme switch: colors fade instead of snapping (class added briefly by app.js) */
+/* Switching light/dark: every colour eases over .7s together (the switch's knob keeps its own slide) */
+.theme-fade, .theme-fade *, .theme-fade *::before, .theme-fade *::after {
+  --theme-ease: .7s cubic-bezier(.4, 0, .2, 1);
+  transition: background-color var(--theme-ease), color var(--theme-ease), border-color var(--theme-ease),
+    box-shadow var(--theme-ease), fill var(--theme-ease), stroke var(--theme-ease), outline-color var(--theme-ease) !important;
+  transition-delay: 0s !important;
+}
+.theme-fade .theme-switch-thumb {
+  transition: translate .6s var(--glide-ease), background-color var(--theme-ease), color var(--theme-ease) !important;
+}
+
+.hobby-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 156px), 1fr)); gap: 12px; }
+@media (min-width: 760px) { .hobby-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); } }
+.hobby {
+  padding: 20px; border-radius: var(--radius);
+  background: var(--surface); border: 1px solid var(--line);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.hobby:hover { transform: translateY(-3px) rotate(-.5deg); box-shadow: var(--shadow); }
+.hobby-emoji { display: block; font-size: 30px; line-height: 1; }
+.hobby h4 { margin: 16px 0 4px; font-size: 17px; font-weight: 600; }
+.hobby p { margin: 0; font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+
+/* ---------- Résumé ---------- */
+.resume-head { display: grid; gap: 28px; max-width: none; }
+@media (min-width: 960px) { .resume-head { grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 48px; } }
+.resume-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+@media (min-width: 960px) { .resume-cta { align-items: flex-end; text-align: right; } }
+.download-missing { margin: 0; font-size: 14.5px; color: var(--ink-2); }
+
+/* Phones and tablets: one column in the order Experience, Education, Skills, Volunteer, "Where I'm headed" (so
+   Education comes sooner). The two column wrappers dissolve (display: contents) so `order` can interleave them.
+   Desktop: two columns that stack independently (Experience + Volunteer + "Where I'm headed" | Education + Skills),
+   so opening a card never opens a gap in the other column. */
+.resume-grid { display: grid; gap: 52px; grid-template-columns: minmax(0, 1fr); }
+.resume-col { display: contents; }
+.rg-work { order: 1; } .rg-edu { order: 2; } .rg-skills { order: 3; } .rg-later { order: 4; } .rg-headed { order: 5; }
+@media (min-width: 960px) {
+  .resume-grid { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 52px 56px; align-items: start; }
+  .resume-col { display: flex; flex-direction: column; gap: 52px; order: 0; }
+}
+/* One column (tablets): a 660px cap keeps lines near 70 characters and gives every card one right edge */
+@media (max-width: 959px) { .resume-grid { max-width: 660px; } }
+/* Group headings (Experience, Education, Skills…): Lora, sentence case, clearly above the card titles */
+.block-title {
+  display: flex; align-items: center; gap: 10px;
+  margin: 0 0 18px;
+  font: 600 24px/1.2 var(--display); letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.block-title:not(:first-child) { margin-top: 52px; }
+.block-title .icon { width: 20px; height: 20px; color: var(--pb-ink); }
+
+/* Roles and volunteering: a plain list of cards (no timeline rail) */
+.timeline { margin: 0; padding: 0; list-style: none; }
+.tl-item { padding: 0 0 16px; }
+/* The last card's bottom padding would stack on the gap before the next group heading */
+.timeline > .tl-item:last-child { padding-bottom: 0; }
+.tl-card {
+  padding: 20px 22px; border-radius: var(--radius);
+  background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-sm);
+}
+.tl-meta { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; }
+/* When a summary is too narrow for the longest title + dates on one line (~490px), every summary puts its dates
+   under the title, so the collapsed list doesn't mix one- and two-line rows. Raise 500px if a longer title is added. */
+.fold-head { container-type: inline-size; }
+@container (max-width: 500px) { .fold-head .tl-meta { flex-direction: column; align-items: flex-start; } }
+.tl-title { margin: 0; font: 600 20px/1.25 var(--display); letter-spacing: -0.01em; }
+.tl-dates { font-size: 14px; font-weight: 600; color: var(--ink-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tl-org { margin: 4px 0 0; font-size: 15.5px; color: var(--ink-2); }
+/* Several roles at one employer: one card, employer on top, roles divided by thin lines */
+.tl-employer {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 16px;
+  padding-bottom: 14px; border-bottom: 1px solid var(--line);
+}
+.tl-employer-name { margin: 0; font: 700 21px/1.25 var(--display); letter-spacing: -0.01em; }
+.tl-employer-loc { font-size: 14px; color: var(--ink-2); }
+.tl-role { padding-top: 16px; }
+.tl-role + .tl-role { margin-top: 20px; border-top: 1px solid var(--line); }
+.tl-group .tl-title { font-size: 18px; }
+/* About half a line between bullets, so each bold lead-in starts its own visible chunk */
+.tl-bullets { display: grid; gap: 12px; margin: 14px 0 0; padding-left: 18px; font-size: 15.5px; line-height: 1.55; }
+.tl-bullets li::marker { color: var(--accent); }
+.tl-bullets .lead-in { font-weight: 700; color: var(--ink); }
+/* ---------- Folding cards: the summary (title, dates, where, pills) shows; tap it to open the detail ----------
+   The heading's button is stretched over the whole summary (::after), so the full summary is the tap target.
+   The detail animates open by growing its grid row from 0fr to 1fr, then fades and settles into place. The pills
+   (skill tags, education badges) sit under the title while closed; opening slides that copy away (.fold-peek) and
+   the detail shows them again at its bottom. */
+.fold-head { position: relative; margin: -8px; padding: 8px 40px 8px 8px; border-radius: 12px; }
+.fold-toggle {
+  margin: 0; padding: 0; border: 0; background: none;
+  font: inherit; letter-spacing: inherit; color: inherit; text-align: left;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.fold-toggle::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+/* Tabbing onto a summary scrolls to its button (the title): leave room below for the rest of the summary */
+.fold-toggle { scroll-margin-block: 12px 72px; }
+.edu .fold-toggle { scroll-margin-bottom: 150px; }
+.fold-toggle:focus-visible { outline: none; }
+.fold-toggle:focus-visible::after { outline: 2.5px solid var(--accent); outline-offset: 2px; border-radius: 12px; }
+/* The expand arrow: wine red, no circle */
+.fold-chev {
+  position: absolute; top: 50%; right: 6px; translate: 0 -50%;
+  display: grid; place-items: center; width: 26px; height: 26px;
+  color: var(--accent); pointer-events: none; transition: scale .15s ease;
+}
+.fold-chev .icon { width: 22px; height: 22px; stroke-width: 2.4; transition: transform .4s cubic-bezier(.2, .7, .2, 1); }
+.foldable.is-open > .fold-head .fold-chev .icon { transform: rotate(180deg); }
+.fold-head:active .fold-chev { scale: .9; }
+/* Opening takes .65s (closing a quicker .45s). Like the "Contact me" dropdown, each bullet drops in with the box,
+   one after another (--i), then its text reveals left to right a moment later; closing tucks them away quickly. */
+.fold { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s cubic-bezier(.4, 0, .2, 1); }
+.foldable.is-open > .fold { grid-template-rows: 1fr; transition: grid-template-rows .65s cubic-bezier(.2, .7, .2, 1); }
+.fold-inner { min-height: 0; overflow: hidden; }
+.fold-inner li { opacity: 0; transform: translateY(-14px); transition: transform .16s ease-in, opacity .12s ease-in; }
+.fold-inner .li-text {
+  display: block; opacity: 0; transform: translateX(-12px); clip-path: inset(-2px 100% -2px 0);
+  transition: transform .12s ease-in, opacity .1s ease-in, clip-path .12s ease-in;
+}
+.foldable.is-open > .fold li {
+  opacity: 1; transform: none;
+  transition: transform .5s cubic-bezier(.3, 1.2, .5, 1), opacity .3s ease-out;
+  transition-delay: calc(60ms + var(--i, 0) * 70ms);
+}
+.foldable.is-open > .fold .li-text {
+  opacity: 1; transform: none; clip-path: inset(-2px -8px -2px 0);
+  transition: transform .36s cubic-bezier(.2, .8, .2, 1), opacity .3s ease-out, clip-path .42s cubic-bezier(.2, .8, .2, 1);
+  transition-delay: calc(160ms + var(--i, 0) * 60ms);
+}
+/* The pills sit right after the folded detail, so they ride down with its bottom edge as it opens */
+.foldable > .fold-pills { cursor: pointer; }
+.fold-inner > :last-child { margin-bottom: 4px; }   /* a little more room above the pills once open */
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 0; padding: 0; list-style: none; }
+.tags li { padding: 4px 10px; border-radius: 999px; background: var(--tag-bg); color: var(--tag-ink); font-size: 13px; font-weight: 600; }
+
+.edu {
+  padding: 22px; border-radius: var(--radius);
+  background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-sm);
+}
+.edu + .edu { margin-top: 12px; }
+.edu-school { margin: 0; font: 600 21px/1.2 var(--display); letter-spacing: -0.01em; }
+.edu-degree { margin: 6px 0 0; font-size: 15.5px; color: var(--ink-2); }
+/* Organisation logos (MagView, UMBC, Springbrook, Shepherd's Table, Forcey): each image is already a square tile
+   (img/logos, 192px), shown as a rounded square left of the name so they look consistent on cream and dark cards */
+.org-logo {
+  flex: none; width: 46px; height: 46px; box-sizing: border-box; border-radius: 11px;
+  object-fit: cover; background: #fff; border: 1px solid var(--line);
+}
+.tl-employer-name, .tl-title:has(.org-logo), .edu-school:has(.org-logo) { display: flex; align-items: center; gap: 14px; }
+.edu--brief .org-logo { width: 38px; height: 38px; border-radius: 9px; }
+.edu--brief .edu-school:has(.org-logo) { gap: 12px; }
+
+/* Education badges: the same peanut-butter pills as the skill tags */
+.badges { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 0; padding: 0; list-style: none; }
+.badge { padding: 4px 10px; border-radius: 999px; background: var(--tag-bg); color: var(--tag-ink); font-size: 13px; font-weight: 600; }
+.edu-details { display: grid; gap: 9px; margin: 14px 0 0; padding-left: 18px; font-size: 15px; color: var(--ink-2); }
+/* High school: a smaller, quieter card so college leads */
+.edu.edu--brief { padding: 14px 18px 15px; background: transparent; box-shadow: none; }
+.edu--brief .edu-school { font-size: 17px; }
+.edu--brief .edu-degree { margin-top: 4px; font-size: 14px; line-height: 1.45; }
+
+/* Skills: one card, each group a label and its skills as peanut-butter pills */
+.skills-card {
+  padding: 6px 22px; border-radius: var(--radius);
+  background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-sm);
+}
+.skill-group { padding: 14px 0 16px; }
+.skill-group + .skill-group { border-top: 1px solid var(--line); }
+.skill-group h4 {
+  margin: 0 0 10px;
+  font-size: 14px; font-weight: 700;
+  color: var(--ink-2);
+}
+.skill-list { display: flex; flex-wrap: wrap; gap: 7px; margin: 0; padding: 0; list-style: none; }
+.skill-list li {
+  padding: 5px 12px; border-radius: 16px;   /* fully round on one line; a tidy rounded box if a long skill wraps */
+  background: var(--tag-bg); color: var(--tag-ink);
+  font-size: 14px; font-weight: 500; line-height: 1.4;
+}
+
+/* ---------- Contact ---------- */
+/* One row per way to reach me: icon circle + value, extra actions (text, copy) at the end */
+.contact-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+@media (min-width: 760px) { .contact-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } }
+@media (min-width: 1040px) { .contact-list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.contact-row {
+  display: flex; align-items: center; gap: 4px; min-width: 0;
+  padding: 7px 8px 7px 7px; border-radius: 20px;
+  background: var(--surface); border: 1px solid var(--line);
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.contact-row:hover { border-color: var(--ink-3); box-shadow: var(--shadow-sm); }
+.contact-main {
+  flex: 1; min-width: 0;
+  display: flex; align-items: center; gap: 12px;
+  padding: 2px 6px 2px 2px; border-radius: 14px;
+  color: var(--ink); text-decoration: none;
+}
+.contact-circle {
+  flex: none; width: 42px; height: 42px;
+  display: grid; place-items: center; border-radius: 50%;
+  background: var(--accent-soft); color: var(--pb-ink-strong);
+}
+.contact-circle .icon { width: 19px; height: 19px; }
+
+/* ---------- Brand logos (Gmail, Google Maps, LinkedIn, GitHub, Handshake) in the icon circles ----------
+   Solid silhouettes of the real logos in the circle's dark brown; their cut-outs show the light-brown circle */
+.logo-mark { display: block; flex: none; width: 26px; height: 26px; }
+.reach-circle .logo-mark { width: 24px; height: 24px; }
+.contact-text { display: flex; flex-direction: column; min-width: 0; }
+.contact-value { font-size: 15.5px; font-weight: 600; line-height: 1.3; overflow-wrap: anywhere; }
+.contact-label { font-size: 13.5px; line-height: 1.35; color: var(--ink-2); }
+.contact-main .arrow {
+  width: 17px; height: 17px; margin-left: auto; color: var(--ink-3);
+  transition: transform .15s ease, color .15s ease;
+}
+.contact-main:hover .arrow { transform: translate(2px, -2px); color: var(--accent-strong); }
+.contact-main:hover .contact-value { color: var(--accent-strong); }
+.contact-actions { display: flex; gap: 4px; flex: none; }
+.row-btn { width: 38px; height: 38px; background: transparent; color: var(--ink-2); }
+.row-btn:hover { background: var(--bg-2); color: var(--ink); }
+.row-btn .icon { width: 17px; height: 17px; }
+
+.contact-cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+@media (max-width: 559px) { .contact-cta .btn { flex: 1 1 100%; } }
+
+/* ---------- Footer ---------- */
+.footer { padding: 32px 0 40px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 14px; }
+.footer-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.footer-links { display: flex; gap: 18px; }
+.footer a { color: var(--ink-2); text-underline-offset: 3px; }
+.footer button { padding: 0; border: 0; background: none; color: var(--ink-2); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+/* ---------- Share dialog ---------- */
+.share {
+  width: min(420px, calc(100% - 32px)); padding: 0;
+  border: 0; border-radius: 28px;
+  background: var(--surface); color: var(--ink);
+  box-shadow: 0 40px 90px -20px rgb(0 0 0 / .5);
+}
+.share::backdrop { background: rgb(28 20 15 / .55); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+
+/* Popups rise and fade in, and ease back out (app.js toggles .is-open and waits before closing) */
+dialog.share {
+  opacity: 0; transform: translateY(14px) scale(.97);
+  transition: opacity .2s ease, transform .26s cubic-bezier(.2, .8, .2, 1);
+}
+dialog.share.is-open { opacity: 1; transform: none; }
+dialog.share::backdrop { opacity: 0; transition: opacity .23s ease; }
+dialog.share.is-open::backdrop { opacity: 1; }
+.share-inner { position: relative; padding: 32px 24px 24px; text-align: center; }
+.share-close { position: absolute; top: 14px; right: 14px; }
+.share h2 { margin: 0; font: 700 28px/1.15 var(--display); letter-spacing: -0.02em; }
+.share-sub { margin: 8px 0 0; font-size: 15px; color: var(--ink-2); }
+.share-qr {
+  width: min(248px, 68vw); margin: 22px auto 0; padding: 14px;
+  border-radius: 20px; border: 1px solid var(--line); background: #fff;
+}
+.share-qr svg { display: block; width: 100%; height: auto; }
+.qr-empty { display: grid; place-items: center; aspect-ratio: 1; padding: 12px; text-align: center; color: #57524A; font-size: 14px; line-height: 1.3; }
+.share-url { margin: 14px 0 0; font-size: 14px; color: var(--ink-2); overflow-wrap: anywhere; }
+.share-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 20px; }
+.share-actions .btn { min-width: 0; min-height: 44px; padding: 0 12px; font-size: 14px; }
+.share-actions:has([data-native-share][hidden]) [data-copy-link] { grid-column: 1 / -1; }
+
+.share-note { margin: 14px 0 0; font-size: 13px; color: var(--ink-3); }
+/* Narrow phones: the heading clears the close button and both button columns fit */
+@media (max-width: 359px) {
+  .share-inner { padding-inline: 16px; }
+  .share h2 { font-size: 22px; }
+  .share-close { top: 10px; right: 10px; }
+  .share-actions .btn { padding: 0 8px; gap: 6px; font-size: 13.5px; }
+}
+/* Short screens: a smaller QR and tighter spacing so the whole dialog fits */
+@media (max-height: 700px) {
+  .share-inner { padding-top: 24px; padding-bottom: 18px; }
+  .share-qr { width: min(200px, 56vw); width: clamp(150px, calc(100dvh - 404px), min(200px, 56vw)); margin-top: 14px; padding: 10px; }
+  .share-actions { margin-top: 14px; }
+  .share-url, .share-note { margin-top: 10px; }
+}
+
+/* ---------- Phones: tighter spacing so the page reads in fewer scrolls ---------- */
+@media (max-width: 759px) {
+  .hero { padding-bottom: 44px; }
+  .section { padding: 44px 0 52px; }
+  .section h2 { font-size: clamp(30px, 8.6vw, 38px); }
+  .section-head { margin-bottom: 24px; }
+  .chapter { padding: 18px 0; }
+  .chapter h3 { font-size: 19px; }
+  .chapter p { font-size: 16.5px; }
+  .resume-head { gap: 16px; }
+  .resume-grid { gap: 36px; }
+  .block-title { margin-bottom: 14px; }
+  .block-title:not(:first-child) { margin-top: 36px; }
+  .tl-item { padding: 0 0 10px; }
+  .tl-card, .edu { padding: 16px 16px 18px; }
+  .skills-card { padding: 4px 16px; }
+  .tl-title { font-size: 18px; }
+  /* (The employer name keeps its 21px here too: a clear step above the 18px role titles) */
+  .tl-bullets { gap: 11px; font-size: 15px; }
+  .tl-role { padding-top: 14px; }
+  .tl-role + .tl-role { margin-top: 16px; }
+  .headed-card { padding: 16px 16px 18px; }
+  .headed-card p { font-size: 16px; }
+  .contact-cta { margin-top: 22px; }
+}
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed; z-index: 100; left: 50%;
+  bottom: calc(24px + env(safe-area-inset-bottom));
+  padding: 11px 18px; border-radius: 999px;
+  background: var(--ink); color: var(--bg);
+  font-size: 14.5px; font-weight: 600;
+  opacity: 0; pointer-events: none;
+  transform: translate(-50%, 16px);
+  transition: opacity .25s ease, transform .25s ease;
+}
+.toast.is-on { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------- Fallbacks ---------- */
+.fallback, .noscript { padding: 64px 0; }
+.fallback code { background: var(--bg-2); padding: 2px 6px; border-radius: 6px; }
+
+/* ---------- Scroll reveal (only when JS + motion are available) ---------- */
+.js-reveal [data-reveal] {
+  opacity: 0; transform: translateY(16px);
+  transition: opacity .7s ease, transform .8s cubic-bezier(.2, .7, .2, 1);
+  transition-delay: var(--d, 0ms);
+}
+.js-reveal [data-reveal].is-in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
+  .reach *, .fold-inner li, .fold-inner .li-text { transition-delay: 0s !important; }
+}
+
+/* ---------- Print: a clean text version of the page ---------- */
+@media print {
+  /* Always print light, even when dark mode is on (the id selector outranks both dark-theme rules) */
+  :root:not(#print) {
+    --bg: #fff; --bg-2: #fff; --surface: #fff;
+    --ink: #000; --ink-2: #333; --ink-3: #555; --line: #ccc;
+    --accent-soft: transparent;
+    --accent: #722F37; --pb-ink: #9A6A32; --pb-ink-strong: #8A5B26;
+    --tag-bg: #EFDDBF; --tag-ink: #3A281C;
+    --accent-strong: color-mix(in oklab, var(--accent) 70%, #000);
+    color-scheme: light;
+  }
+  .topbar, .sample-banner, .hero-actions, .resume-cta,
+  .contact-cta, .contact-actions, .contact-main .arrow, .footer, .share, .toast { display: none !important; }
+  body { background: #fff; color: #000; padding: 0; font-size: 11pt; }
+  .section { padding: 18pt 0; border: 0; }
+  .section--alt { background: none; color: #000; }
+  .js-reveal [data-reveal] { opacity: 1 !important; transform: none !important; }
+  .fold-chev { display: none; }
+  .fold-head { padding-right: 8px; }
+  .fold { grid-template-rows: 1fr !important; }
+  .fold-inner li, .fold-inner .li-text { opacity: 1 !important; transform: none !important; clip-path: none !important; }
+  .fold-inner[hidden] { display: block !important; content-visibility: visible !important; }
+  .tl-card, .edu, .contact-row, .skills-card, .headed-card, .num, .hobby, .fact { box-shadow: none; border-color: #ccc; break-inside: avoid; }
+  .tl-group { break-inside: auto; }
+  .tl-role { break-inside: avoid; }
+  .block-title { break-after: avoid; }
+  /* The skills card is taller than most of a page: let it split between skill groups instead of leaving a blank page */
+  .skills-card { break-inside: auto; }
+  .skill-group { break-inside: avoid; }
+}
