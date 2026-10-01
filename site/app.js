@@ -856,9 +856,14 @@
     pillTab = next;
     placeGlide(!first);
   };
-  // Put the highlight on whatever the page is actually showing (after a hold ends)
+  // Put the highlight on whatever the page is actually showing: Home at the very top, the last section once the
+  // page can't scroll any further (on tall screens it never reaches the middle), otherwise the section across the
+  // middle. Runs on every scroll too, since on wide screens the short intro leaves About across the middle from the
+  // start, so About never "enters" the middle for the scroll spy to notice.
+  const atBottom = () => !atTop() && scrollY + innerHeight >= document.documentElement.scrollHeight - 2;
   const resync = () => {
     if (atTop()) setActive('home');
+    else if (atBottom()) setActive(navLinks[navLinks.length - 1].dataset.nav);
     else if (inBand.size && !inBand.has(currentId)) setActive([...inBand].pop());
   };
   // Tab sizes change with the window and once the fonts load: re-place the pill and the wheel without animating.
@@ -955,11 +960,10 @@
       jumpTo(next.dataset.wheel);
     });
   }
-  // Top bar border once scrolled. At the very top, Home is the current section even on tall
-  // screens where the short intro leaves About across the middle of the view.
+  // Top bar border once scrolled, and the highlight kept on the section the page is showing
   const onScroll = () => {
     topbar.classList.toggle('is-scrolled', !atTop());
-    if (atTop() && !holding()) setActive('home');
+    if (!holding()) resync();
   };
   addEventListener('scroll', onScroll, { passive: true });
   onScroll();
@@ -973,10 +977,7 @@
         else inBand.delete(en.target.id);
         if (en.isIntersecting && !holding()) setActive(en.target.id);
       });
-      if (holding()) return;
-      const current = navLinks.find((a) => a.classList.contains('is-active'))?.dataset.nav;
-      if (inBand.size && !inBand.has(current)) setActive([...inBand].pop());
-      if (atTop()) setActive('home');
+      if (!holding()) resync();
     }, { rootMargin: '-45% 0px -50% 0px' });
     ['home', 'about', 'resume', 'contact']
       .map((id) => document.getElementById(id))
