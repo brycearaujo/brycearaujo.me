@@ -23,7 +23,7 @@ window.PROFILE = {
   "location": "Burtonsville, MD",
   "locationNote": "",
   "email": "brycejaraujo@gmail.com",
-  "phone": "240-360-6065",
+  "phone": "",
   "website": "https://brycearaujo.github.io/brycearaujo.me/",
   "photo": "",
 
